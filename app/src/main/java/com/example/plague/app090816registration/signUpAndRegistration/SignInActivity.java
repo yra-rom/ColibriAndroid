@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,12 +15,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.clients.SendKeys;
+import com.example.plague.app090816registration.clients.SignThread;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG = "SignInActivity";
-
-    public static final String NICK = "NICK";
-    public static final String PASS = "PASS";
 
     private EditText etNickOrEmail;
     private EditText etPassword;
@@ -45,60 +46,117 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         btnSignIn.setOnClickListener(this);
         tvRegister.setOnClickListener(this);
+
+
+        etNickOrEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                etNickOrEmail.setTextColor(Color.BLACK);
+                etNickOrEmail.setHintTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                etPassword.setTextColor(Color.BLACK);
+                etPassword.setHintTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.sign_btnSignIn:
-                String name = etNickOrEmail.getText().toString();
-                String pass = etPassword.getText().toString();
-                if(checkName(name)){
-                    if(checkPassword(pass)){
-                        //if user and password are correct and
-                        if(cbKeepLogged.isChecked()){
-                            //remember users nick and pass
-                            rememberUser(name, pass);
-                        }
-                        //TO DO Activity when is logged in
-                    }else{
-                        //if user is correct BUT password is not correct
-                        etPassword.setTextColor(Color.RED);
-                    }
-                }else{
-                    //if user is not correct
-                    etNickOrEmail.setTextColor(Color.RED);
-                }
+                logInUser();
                 break;
             case R.id.tvRegister:
                 //if user want to create a new account
-                Intent intent = new Intent(this, RegistrationActivity.class);
-                startActivityForResult(intent, 1);
+                registerUser();
                 break;
+        }
+    }
+
+    private void registerUser() {
+        Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    private void logInUser() {
+        String name = etNickOrEmail.getText().toString();
+        String pass = etPassword.getText().toString();
+        if(checkName(name)){
+            if(checkPassword(pass)){
+                //if user and password are correct and
+                if(cbKeepLogged.isChecked()){
+                    //remember users nick and pass
+                    rememberUser(name, pass);
+                }
+                //Log.d(TAG,"Imitating that user successfully logged in");
+                //TO DO Activity when is logged in
+            }else{
+                //if user is correct BUT password is not correct
+                etPassword.setTextColor(Color.RED);
+            }
+        }else{
+            //if user is not correct
+            etNickOrEmail.setTextColor(Color.RED);
         }
     }
 
     private void rememberUser(String key1, String key2) {
         sharedPrefs = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sharedPrefs.edit();
-        ed.putString(NICK, key1);
+        ed.putString(SendKeys.NICK, key1);
         ed.commit();
-        ed.putString(PASS, key2);
+        ed.putString(SendKeys.PASS, key2);
         ed.commit();
     }
 
-    private boolean checkName(final String key) {
-        //TO DO
-        //connect to server and
-        //check on database
-        return false;
+    private boolean checkName(String keyWord){
+        Boolean answ =  check(SendKeys.NICK, keyWord);
+        if(!answ){
+            etNickOrEmail.setTextColor(Color.RED);
+            etNickOrEmail.setHintTextColor(Color.RED);
+        }
+        return answ;
     }
 
-    private boolean checkPassword(final String key) {
-        //TO DO
-        //connect to server and
-        //check on database
-        return false;
+    private boolean checkPassword(String keyWord){
+        Boolean answ =  check(SendKeys.PASS, keyWord);;
+        if(!answ){
+            etPassword.setTextColor(Color.RED);
+            etPassword.setHintTextColor(Color.RED);
+        }
+        return answ;
+    }
+
+    private boolean check(String key, String keyWord){
+        if(keyWord.equals("")) return false;
+
+        SignThread signThread = new SignThread(key, keyWord);
+        signThread.start();
+
+        while(signThread.getAnswer()==null); // potential dead loop!!!
+        Log.d(TAG, "Server's answer is: " + signThread.getAnswer());
+
+        signThread.close();
+        signThread.interrupt();
+
+        return signThread.getAnswer();
     }
 
     @Override
@@ -108,8 +166,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
         if(resultCode == RESULT_OK) {
-            String nick = data.getStringExtra("NICK");
-            Log.d(TAG, "NICK" + nick);
+            String nick = data.getStringExtra(SendKeys.NICK);
+            //Log.d(TAG, SendKeys.NICK + nick);
             etNickOrEmail.setText(nick);
             tvRegSucc.setText(R.string.regSuccess);
         }

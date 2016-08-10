@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.clients.SendKeys;
+import com.example.plague.app090816registration.clients.SignThread;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -37,13 +40,57 @@ public class RegistrationActivity extends AppCompatActivity {
         etConfPass = (EditText) findViewById(R.id.reg_etConfirmPassword);
         tvWrongConfPass = (TextView) findViewById(R.id.reg_tvWrongConfPass);
         btnReg = (Button) findViewById(R.id.reg_btnRegister);
+
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                etName.setTextColor(Color.BLACK);
+                etName.setHintTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
         etEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                etEmail.setTextColor(etName.getTextColors());
+                etEmail.setTextColor(Color.BLACK);
+                etEmail.setHintTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        etPass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                etPass.setTextColor(Color.BLACK);
+                etPass.setHintTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        etConfPass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                etConfPass.setTextColor(Color.BLACK);
+                etConfPass.setHintTextColor(Color.BLACK);
             }
 
             @Override
@@ -54,15 +101,20 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                tvWrongConfPass.setText("");
-                if(etName.getText().toString().equals("")){etName.setHintTextColor(Color.RED);}
-                else if(etEmail.getText().toString().equals("")){etEmail.setHintTextColor(Color.RED);}
-                else if(etPass.getText().toString().equals("")){etPass.setHintTextColor(Color.RED);}
-                else if(etConfPass.getText().toString().equals("")){etConfPass.setHintTextColor(Color.RED);}
-                else if(!etPass.getText().toString().equals(etConfPass.getText().toString())){tvWrongConfPass.setText(R.string.passNotEqual);}
-                else{
 
-                    if(checkEmailIsFree()){
+                String name = etName.getText().toString();
+                String mail = etEmail.getText().toString();
+                String pass = etPass.getText().toString();
+                String confPass = etConfPass.getText().toString();
+
+                tvWrongConfPass.setText("");
+                if(name.equals("")){etName.setHintTextColor(Color.RED);}
+                else if(mail.equals("")){etEmail.setHintTextColor(Color.RED);}
+                else if(pass.equals("")){etPass.setHintTextColor(Color.RED);}
+                else if(confPass.equals("")){etConfPass.setHintTextColor(Color.RED);}
+                else if(!pass.equals(confPass)){tvWrongConfPass.setText(R.string.passNotEqual);}
+                else{
+                    if(checkEmailIsFree(mail)){
                         registerUser();
                         Intent intent = new Intent();
                         intent.putExtra("NICK", etName.getText().toString());
@@ -79,11 +131,19 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-    private boolean checkEmailIsFree() {
+    private boolean checkEmailIsFree(String email) {
         //TO DO
         //connect with server
         //check if email is not used
-        return true;
+        SignThread signThread = new SignThread(SendKeys.EMAIL, email);
+        signThread.start();
+        while(signThread.getAnswer()==null); // potential dead loop!!!
+        Log.d(TAG, "Server's answer is: " + signThread.getAnswer());
+
+        signThread.close();
+        signThread.interrupt();
+
+        return signThread.getAnswer();
     }
 
     private void registerUser() {

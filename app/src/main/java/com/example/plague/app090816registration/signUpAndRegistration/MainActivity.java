@@ -5,21 +5,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity{
+import com.example.plague.app090816registration.clients.SendKeys;
 
-    public static final String NICK = "NICK";
-    public static final String PASS = "PASS";
+public class MainActivity extends AppCompatActivity{
     public static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPrefs = getPreferences(MODE_PRIVATE);
 
-        if(sharedPrefs.getString(NICK,"") !=null && sharedPrefs.getString(PASS,"") != null){
+        SharedPreferences sharedPrefs = getPreferences(MODE_PRIVATE);
+        String s1 = sharedPrefs.getString(SendKeys.NICK,"");
+        String s2 = sharedPrefs.getString(SendKeys.PASS,"");
+        if(s1.equals("") || s2.equals("")){
             Intent intent = new Intent(this, SignInActivity.class);
-            startActivityForResult(intent, RESULT_OK);
-        }else{
+            startActivity(intent);
+        }else {
             //TO DO
             //if already logged in
         }

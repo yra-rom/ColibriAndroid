@@ -118,11 +118,17 @@ public class RegistrationActivity extends AppCompatActivity {
                 else if(!pass.equals(confPass)){tvWrongConfPass.setText(R.string.passNotEqual);}
                 else{
                     if(checkEmailIsFree(mail)){
-                        registerUser();
+//                        registerUser(name, mail, pass);
+//                        Intent intent = new Intent();
+//                        intent.putExtra(SendKeys.EMAIL, mail);
+//                        setResult(RESULT_OK, intent);
+//                        finish();
+
                         Intent intent = new Intent();
                         intent.putExtra(SendKeys.EMAIL, mail);
-                        setResult(RESULT_OK, intent);
+                        setResult(registerUser(name, mail, pass) ? RESULT_OK : RESULT_CANCELED, intent);
                         finish();
+
                     }
                     else{
                         tvWrongConfPass.setText(R.string.emailIsUsed);
@@ -153,7 +159,24 @@ public class RegistrationActivity extends AppCompatActivity {
         return !signThread.getAnswer();
     }
 
-    private void registerUser() {
+    private Boolean registerUser(String name, String email, String pass) {
+        Map map = new HashMap<String, String>();
+        map.put(SendKeys.TITLE, SendKeys.REGISTER);
+        map.put(SendKeys.NICK, name);
+        map.put(SendKeys.EMAIL, email);
+        map.put(SendKeys.PASS, pass);
+
+
+        LogInThread signThread = new LogInThread(map);
+        signThread.start();
+        while(signThread.getAnswer()==null); // potential dead loop!!!
+        Log.d(TAG, "Server's answer is: " + signThread.getAnswer());
+
+        signThread.close();
+        signThread.interrupt();
+
+        return signThread.getAnswer();
+
         //TO DO
         //connect with server
         //save new user

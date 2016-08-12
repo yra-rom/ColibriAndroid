@@ -9,8 +9,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Map;
 
-public class SignThread extends Thread {
-    public static final String TAG = "SignThread";
+public class LogInThread extends Thread {
+    public static final String TAG = "LogInThread";
     public static final String HOST = "192.168.43.142";
     public static final int PORT = 5678;
 
@@ -24,7 +24,7 @@ public class SignThread extends Thread {
 
     private int numberOfSendMessages = 0;
 
-    public SignThread(Map map){
+    public LogInThread(Map map){
         this.map = map;
     }
 

@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.signUpAndRegistration;
+package com.example.plague.app090816registration.LogInAndRegistration;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity{
         String s1 = sharedPrefs.getString(SendKeys.NICK,"");
         String s2 = sharedPrefs.getString(SendKeys.PASS,"");
         if(s1.equals("") || s2.equals("")){
-            Intent intent = new Intent(this, SignInActivity.class);
+            Intent intent = new Intent(this, LogInActivity.class);
             startActivity(intent);
         }else {
             //TO DO

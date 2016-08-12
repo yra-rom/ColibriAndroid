@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.signUpAndRegistration;
+package com.example.plague.app090816registration.LogInAndRegistration;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.clients.LogInThread;
 import com.example.plague.app090816registration.clients.SendKeys;
-import com.example.plague.app090816registration.clients.SignThread;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -120,7 +120,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     if(checkEmailIsFree(mail)){
                         registerUser();
                         Intent intent = new Intent();
-                        intent.putExtra("NICK", etName.getText().toString());
+                        intent.putExtra(SendKeys.EMAIL, mail);
                         setResult(RESULT_OK, intent);
                         finish();
                     }
@@ -139,9 +139,10 @@ public class RegistrationActivity extends AppCompatActivity {
         //connect with server
         //check if email is not used
         Map map = new HashMap<String, String>();
+        map.put(SendKeys.TITLE, SendKeys.CHECK_MAIL);
         map.put(SendKeys.EMAIL, email);
 
-        SignThread signThread = new SignThread(map);
+        LogInThread signThread = new LogInThread(map);
         signThread.start();
         while(signThread.getAnswer()==null); // potential dead loop!!!
         Log.d(TAG, "Server's answer is: " + signThread.getAnswer());

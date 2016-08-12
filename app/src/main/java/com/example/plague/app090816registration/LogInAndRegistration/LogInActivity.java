@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.signUpAndRegistration;
+package com.example.plague.app090816registration.LogInAndRegistration;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,16 +15,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.clients.LogInThread;
 import com.example.plague.app090816registration.clients.SendKeys;
-import com.example.plague.app090816registration.clients.SignThread;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
-    public static final String TAG = "SignInActivity";
+public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
+    public static final String TAG = "LogInActivity";
 
-    private EditText etNickOrEmail;
+    private EditText etEmail;
     private EditText etPassword;
     private Button btnSignIn;
     private TextView tvRegister;
@@ -40,7 +40,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initViews() {
-        etNickOrEmail = (EditText) findViewById(R.id.sign_etNameOrEMail);
+        etEmail = (EditText) findViewById(R.id.sign_etEmail);
         etPassword = (EditText) findViewById(R.id.sign_etPassword);
         btnSignIn = (Button) findViewById(R.id.sign_btnSignIn);
         tvRegister = (TextView) findViewById(R.id.tvRegister);
@@ -51,14 +51,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         tvRegister.setOnClickListener(this);
 
 
-        etNickOrEmail.addTextChangedListener(new TextWatcher() {
+        etEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                etNickOrEmail.setTextColor(Color.BLACK);
-                etNickOrEmail.setHintTextColor(Color.BLACK);
+                etEmail.setTextColor(Color.BLACK);
+                etEmail.setHintTextColor(Color.BLACK);
             }
 
             @Override
@@ -99,7 +99,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void logInUser() {
-        String email = etNickOrEmail.getText().toString();
+        String email = etEmail.getText().toString();
         String pass = etPassword.getText().toString();
         if(checkEmail(email)){
             Log.d(TAG, "Server checked email: email is correct");
@@ -120,7 +120,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }else{
             Log.d(TAG, "Server checked mail: mail is NOT correct");
             //if user is not correct
-            etNickOrEmail.setTextColor(Color.RED);
+            etEmail.setTextColor(Color.RED);
         }
     }
 
@@ -137,9 +137,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         if(keyWord.equals("")) return false;
 
         Map map = new HashMap<String, String>();
+        map.put(SendKeys.TITLE, SendKeys.CHECK_MAIL);
         map.put(SendKeys.EMAIL, keyWord);
 
-        SignThread signThread = new SignThread(map);
+        LogInThread signThread = new LogInThread(map);
         signThread.start();
 
         while(signThread.getAnswer()==null); // potential dead loop!!!
@@ -151,8 +152,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         Boolean answ = signThread.getAnswer();
 
         if(!answ){
-            etNickOrEmail.setTextColor(Color.RED);
-            etNickOrEmail.setHintTextColor(Color.RED);
+            etEmail.setTextColor(Color.RED);
+            etEmail.setHintTextColor(Color.RED);
         }
         return answ;
     }
@@ -161,11 +162,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         if(pass.equals("")) return false;
 
         Map map = new HashMap<String, String>();
+        map.put(SendKeys.TITLE, SendKeys.CHECK_PASS);
         map.put(SendKeys.EMAIL, email);
         map.put(SendKeys.PASS, pass);
 
 
-        SignThread signThread = new SignThread(map);
+        LogInThread signThread = new LogInThread(map);
         signThread.start();
 
         while(signThread.getAnswer()==null); // potential dead loop!!!
@@ -190,9 +192,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
         if(resultCode == RESULT_OK) {
-            String nick = data.getStringExtra(SendKeys.NICK);
+            String nick = data.getStringExtra(SendKeys.EMAIL);
             //Log.d(TAG, SendKeys.NICK + nick);
-            etNickOrEmail.setText(nick);
+            etEmail.setText(nick);
             tvRegSucc.setText(R.string.regSuccess);
         }
     }

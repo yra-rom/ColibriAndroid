@@ -7,12 +7,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".signUpAndRegistration.MainActivity">
+    tools:context=".LogInAndRegistration.MainActivity">
 
 
     <EditText
-        android:id="@+id/sign_etNameOrEMail"
-        android:hint="@string/nickOrEmail"
+        android:id="@+id/sign_etEmail"
+        android:hint="@string/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress|textPersonName"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:layout_below="@+id/sign_etNameOrEMail"
+        android:layout_below="@+id/sign_etEmail"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -47,7 +47,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/signIn"
+        android:text="@string/logIn"
         android:id="@+id/sign_btnSignIn"
         android:layout_above="@+id/tvRegister"
         android:layout_centerHorizontal="true"

@@ -2,8 +2,7 @@
     <string name="app_name">App090816Registration</string>
     <string name="register">Register</string>
     <string name="password">Password</string>
-    <string name="nickOrEmail">Nick Or Email</string>
-    <string name="signIn">Sign In</string>
+    <string name="logIn">Log In</string>
     <string name="keepLogged">Keep Me Logged In</string>
     <string name="name">Name</string>
     <string name="email">E-mail</string>

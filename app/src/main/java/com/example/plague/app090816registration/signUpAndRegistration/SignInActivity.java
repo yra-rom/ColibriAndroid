@@ -18,6 +18,9 @@ import com.example.plague.app090816registration.R;
 import com.example.plague.app090816registration.clients.SendKeys;
 import com.example.plague.app090816registration.clients.SignThread;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG = "SignInActivity";
 
@@ -96,22 +99,26 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void logInUser() {
-        String name = etNickOrEmail.getText().toString();
+        String email = etNickOrEmail.getText().toString();
         String pass = etPassword.getText().toString();
-        if(checkName(name)){
-            if(checkPassword(pass)){
+        if(checkEmail(email)){
+            Log.d(TAG, "Server checked email: email is correct");
+            if(checkPassword(email, pass)){
+                Log.d(TAG, "Server checked pass: pass is correct");
                 //if user and password are correct and
                 if(cbKeepLogged.isChecked()){
                     //remember users nick and pass
-                    rememberUser(name, pass);
+                    rememberUser(email, pass);
                 }
-                //Log.d(TAG,"Imitating that user successfully logged in");
+                Log.d(TAG,"Imitating that user successfully logged in");
                 //TO DO Activity when is logged in
             }else{
+                Log.d(TAG, "Server checked name: name is NOT correct");
                 //if user is correct BUT password is not correct
                 etPassword.setTextColor(Color.RED);
             }
         }else{
+            Log.d(TAG, "Server checked mail: mail is NOT correct");
             //if user is not correct
             etNickOrEmail.setTextColor(Color.RED);
         }
@@ -126,28 +133,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         ed.commit();
     }
 
-    private boolean checkName(String keyWord){
-        Boolean answ =  check(SendKeys.NICK, keyWord);
-        if(!answ){
-            etNickOrEmail.setTextColor(Color.RED);
-            etNickOrEmail.setHintTextColor(Color.RED);
-        }
-        return answ;
-    }
-
-    private boolean checkPassword(String keyWord){
-        Boolean answ =  check(SendKeys.PASS, keyWord);;
-        if(!answ){
-            etPassword.setTextColor(Color.RED);
-            etPassword.setHintTextColor(Color.RED);
-        }
-        return answ;
-    }
-
-    private boolean check(String key, String keyWord){
+    private boolean checkEmail(String keyWord){
         if(keyWord.equals("")) return false;
 
-        SignThread signThread = new SignThread(key, keyWord);
+        Map map = new HashMap<String, String>();
+        map.put(SendKeys.EMAIL, keyWord);
+
+        SignThread signThread = new SignThread(map);
         signThread.start();
 
         while(signThread.getAnswer()==null); // potential dead loop!!!
@@ -156,7 +148,39 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         signThread.close();
         signThread.interrupt();
 
-        return signThread.getAnswer();
+        Boolean answ = signThread.getAnswer();
+
+        if(!answ){
+            etNickOrEmail.setTextColor(Color.RED);
+            etNickOrEmail.setHintTextColor(Color.RED);
+        }
+        return answ;
+    }
+
+    private boolean checkPassword(String email, String pass){
+        if(pass.equals("")) return false;
+
+        Map map = new HashMap<String, String>();
+        map.put(SendKeys.EMAIL, email);
+        map.put(SendKeys.PASS, pass);
+
+
+        SignThread signThread = new SignThread(map);
+        signThread.start();
+
+        while(signThread.getAnswer()==null); // potential dead loop!!!
+        Log.d(TAG, "Server's answer is: " + signThread.getAnswer());
+
+        signThread.close();
+        signThread.interrupt();
+
+        Boolean answ = signThread.getAnswer();
+
+        if(!answ){
+            etPassword.setTextColor(Color.RED);
+            etPassword.setHintTextColor(Color.RED);
+        }
+        return answ;
     }
 
     @Override

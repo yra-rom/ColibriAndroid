@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
 
 public class SignThread extends Thread {
@@ -19,16 +18,14 @@ public class SignThread extends Thread {
     private static ObjectInputStream input;
     private static ObjectOutputStream output;
 
-    private String key;
-    private String keyWord;
+    private Map map;
 
     private Boolean answer;
 
     private int numberOfSendMessages = 0;
 
-    public SignThread(String key, String keyWord){
-        this.key = key;
-        this.keyWord = keyWord;
+    public SignThread(Map map){
+        this.map = map;
     }
 
     @Override
@@ -51,11 +48,11 @@ public class SignThread extends Thread {
 
     private void send() {
         try {
-            Map map = new HashMap<String, String>();
-            map.put(key, keyWord);
-            output.flush();
-            output.writeObject(map);
-            output.flush();
+            if(map!= null) {
+                output.flush();
+                output.writeObject(map);
+                output.flush();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

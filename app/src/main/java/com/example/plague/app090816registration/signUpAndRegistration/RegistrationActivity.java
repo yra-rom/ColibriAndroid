@@ -16,6 +16,9 @@ import com.example.plague.app090816registration.R;
 import com.example.plague.app090816registration.clients.SendKeys;
 import com.example.plague.app090816registration.clients.SignThread;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegistrationActivity extends AppCompatActivity {
 
     public static final String TAG = "RegistrationActivity";
@@ -135,7 +138,10 @@ public class RegistrationActivity extends AppCompatActivity {
         //TO DO
         //connect with server
         //check if email is not used
-        SignThread signThread = new SignThread(SendKeys.EMAIL, email);
+        Map map = new HashMap<String, String>();
+        map.put(SendKeys.EMAIL, email);
+
+        SignThread signThread = new SignThread(map);
         signThread.start();
         while(signThread.getAnswer()==null); // potential dead loop!!!
         Log.d(TAG, "Server's answer is: " + signThread.getAnswer());
@@ -143,7 +149,7 @@ public class RegistrationActivity extends AppCompatActivity {
         signThread.close();
         signThread.interrupt();
 
-        return signThread.getAnswer();
+        return !signThread.getAnswer();
     }
 
     private void registerUser() {

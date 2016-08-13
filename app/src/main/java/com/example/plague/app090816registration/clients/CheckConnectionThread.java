@@ -22,12 +22,9 @@ public class CheckConnectionThread extends Thread {
 
     public boolean currentState = false;
 
-    private LogInActivity activity;
-
     Thread refreshConnectionState;
 
     public CheckConnectionThread(LogInActivity activity){
-        this.activity = activity;
         refreshConnectionState = new Thread( new Runnable() {
             @Override
             public void run() {
@@ -35,7 +32,7 @@ public class CheckConnectionThread extends Thread {
                     if (currentState) {
                         activity.setConnectionON();
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(15000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -64,14 +61,14 @@ public class CheckConnectionThread extends Thread {
                 e.printStackTrace();
             }
         }
+        if(isInterrupted())
+            refreshConnectionState.interrupt();
     }
 
     private void receive() throws IOException, ClassNotFoundException {
-//        activity.setConnectionOFF();
         currentState = false;
         input.readObject();
         currentState = true;
-//        activity.setConnectionON();
     }
 
     private void ask() throws IOException {

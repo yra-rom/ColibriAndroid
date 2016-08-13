@@ -15,8 +15,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         SharedPreferences sharedPrefs = getPreferences(MODE_PRIVATE);
-        String s1 = sharedPrefs.getString(SendKeys.NICK,"");
-        String s2 = sharedPrefs.getString(SendKeys.PASS,"");
+        String s1 = sharedPrefs.getString(SendKeys.EMAIL, "");
+        String s2 = sharedPrefs.getString(SendKeys.PASS, "");
         if(s1.equals("") || s2.equals("")){
             Intent intent = new Intent(this, LogInActivity.class);
             startActivity(intent);

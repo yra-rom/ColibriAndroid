@@ -31,7 +31,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private Button btnSignIn;
     private TextView tvRegister;
     private CheckBox cbKeepLogged;
-    private SharedPreferences sharedPrefs;
     private TextView tvRegSucc;
     private TextView tvConnInfo;
 
@@ -50,6 +49,12 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         super.onPause();
     }
 
+    @Override
+    protected void onRestart() {
+        startCheckingConnection();
+        super.onRestart();
+    }
+
     private void initViews() {
         etEmail = (EditText) findViewById(R.id.sign_etEmail);
         etPassword = (EditText) findViewById(R.id.sign_etPassword);
@@ -61,13 +66,20 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         Log.d(TAG, String.valueOf(etEmail.getHintTextColors()));
 
-        chConn = new CheckConnectionThread(this);
-        chConn.start();
+        startCheckingConnection();
 
         btnSignIn.setOnClickListener(this);
         tvRegister.setOnClickListener(this);
 
+        addTextChangeListeners();
+    }
 
+    private void startCheckingConnection() {
+        chConn = new CheckConnectionThread(this);
+        chConn.start();
+    }
+
+    private void addTextChangeListeners() {
         etEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -141,15 +153,13 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void rememberUser(String key1, String key2) {
-        sharedPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPrefs = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sharedPrefs.edit();
-        ed.putString(SendKeys.NICK, key1);
+        ed.putString(SendKeys.EMAIL, key1);
         ed.commit();
         ed.putString(SendKeys.PASS, key2);
         ed.commit();
     }
-
-
 
     private boolean checkEmail(String keyWord){
         if(keyWord.equals("")) return false;
@@ -224,24 +234,22 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void setConnectionOFF(){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        runOnUiThread( () ->
+            {
                 btnSignIn.setEnabled(false);
                 tvRegister.setEnabled(false);
                 tvConnInfo.setVisibility(View.VISIBLE);
             }
-        });
+        );
     }
 
     public void setConnectionON() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        runOnUiThread(() ->
+            {
                 btnSignIn.setEnabled(true);
                 tvRegister.setEnabled(true);
                 tvConnInfo.setVisibility(View.INVISIBLE);
             }
-        });
+        );
     }
 }

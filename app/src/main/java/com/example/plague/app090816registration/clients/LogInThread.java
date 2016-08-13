@@ -35,7 +35,9 @@ public class LogInThread extends Thread {
             sendData();
             receiveAnswer();
             close();
-        } catch (IOException e) { e.printStackTrace();} catch (ClassNotFoundException e) {
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

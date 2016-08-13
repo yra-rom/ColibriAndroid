@@ -11,5 +11,7 @@
     <string name="passNotEqual">Passwords are not equal</string>
     <string name="regSuccess">Registration Successful</string>
     <string name="emailIsUsed">Current e-mail is already used</string>
+    <string name="noConnection">No Connection With Server</string>
+    <string name="connectingToServer">Connecting To Server...</string>
 
 </resources>

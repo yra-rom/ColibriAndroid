@@ -12,6 +12,7 @@ import java.util.Map;
 public class LogInThread extends Thread {
     public static final String TAG = "LogInThread";
     public static final String HOST = "192.168.43.142";
+//    public static final String HOST = "192.168.2.4";
     public static final int PORT = 5678;
 
     private static Socket connection;
@@ -22,31 +23,41 @@ public class LogInThread extends Thread {
 
     private Boolean answer;
 
-    private int numberOfSendMessages = 0;
-
     public LogInThread(Map map){
         this.map = map;
     }
 
     @Override
     public void run() {
-        Log.d(TAG, "Started.");
         try {
-            Log.d(TAG, "About to connect...");
-            connection = new Socket(InetAddress.getByName(HOST), PORT);
-            Log.d(TAG, "Connected!");
-            output = new ObjectOutputStream(connection.getOutputStream());
-            input = new ObjectInputStream(connection.getInputStream());
-            send();
-            answer = (Boolean) input.readObject();
-            Log.d(TAG, answer.toString());
+            initConnection();
+            initStreams();
+            sendData();
+            receiveAnswer();
             close();
         } catch (IOException e) { e.printStackTrace();} catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private void send() {
+    private void receiveAnswer() throws IOException, ClassNotFoundException {
+        answer = (Boolean) input.readObject();
+        Log.d(TAG, answer.toString());
+    }
+
+    private void initStreams() throws IOException {
+        output = new ObjectOutputStream(connection.getOutputStream());
+        input = new ObjectInputStream(connection.getInputStream());
+    }
+
+    private void initConnection() throws IOException {
+        Log.d(TAG, "Started.");
+        Log.d(TAG, "About to connect...");
+        connection = new Socket(InetAddress.getByName(HOST), PORT);
+        Log.d(TAG, "Connected!");
+    }
+
+    private void sendData() {
         try {
             if(map!= null) {
                 output.flush();
@@ -57,7 +68,6 @@ public class LogInThread extends Thread {
             e.printStackTrace();
         }
     }
-
 
     public void close(){
         try {
@@ -71,4 +81,5 @@ public class LogInThread extends Thread {
     public Boolean getAnswer() {
         return answer;
     }
+
 }

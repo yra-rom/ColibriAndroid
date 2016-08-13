@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.clients.CheckConnectionThread;
 import com.example.plague.app090816registration.clients.LogInThread;
 import com.example.plague.app090816registration.clients.SendKeys;
 
@@ -31,12 +33,21 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private CheckBox cbKeepLogged;
     private SharedPreferences sharedPrefs;
     private TextView tvRegSucc;
+    private TextView tvConnInfo;
+
+    private CheckConnectionThread chConn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in);
         initViews();
+    }
+
+    @Override
+    protected void onPause() {
+        chConn.interrupt();
+        super.onPause();
     }
 
     private void initViews() {
@@ -46,6 +57,12 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         tvRegister = (TextView) findViewById(R.id.tvRegister);
         cbKeepLogged = (CheckBox) findViewById(R.id.sign_cbKeepLogged);
         tvRegSucc = (TextView) findViewById(R.id.sign_tvRegSucc);
+        tvConnInfo = (TextView) findViewById(R.id.sign_tvConnectionInfo);
+
+        Log.d(TAG, String.valueOf(etEmail.getHintTextColors()));
+
+        chConn = new CheckConnectionThread(this);
+        chConn.start();
 
         btnSignIn.setOnClickListener(this);
         tvRegister.setOnClickListener(this);
@@ -58,7 +75,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 etEmail.setTextColor(Color.BLACK);
-                etEmail.setHintTextColor(Color.BLACK);
+                etEmail.setHintTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorDefaultHint));
             }
 
             @Override
@@ -72,7 +89,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 etPassword.setTextColor(Color.BLACK);
-                etPassword.setHintTextColor(Color.BLACK);
+                etPassword.setHintTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorDefaultHint));
             }
 
             @Override
@@ -87,7 +104,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 logInUser();
                 break;
             case R.id.tvRegister:
-                //if user want to create a new account
                 registerUser();
                 break;
         }
@@ -132,6 +148,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         ed.putString(SendKeys.PASS, key2);
         ed.commit();
     }
+
+
 
     private boolean checkEmail(String keyWord){
         if(keyWord.equals("")) return false;
@@ -195,6 +213,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             String nick = data.getStringExtra(SendKeys.EMAIL);
             //Log.d(TAG, SendKeys.NICK + nick);
             etEmail.setText(nick);
+            etPassword.setText("");
             tvRegSucc.setText(R.string.regSuccess);
         }
     }
@@ -202,5 +221,27 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
         //Override to disable back key pressed
+    }
+
+    public void setConnectionOFF(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnSignIn.setEnabled(false);
+                tvRegister.setEnabled(false);
+                tvConnInfo.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public void setConnectionON() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnSignIn.setEnabled(true);
+                tvRegister.setEnabled(true);
+                tvConnInfo.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 }

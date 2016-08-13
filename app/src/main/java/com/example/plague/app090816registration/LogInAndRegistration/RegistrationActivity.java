@@ -3,6 +3,7 @@ package com.example.plague.app090816registration.LogInAndRegistration;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -51,7 +52,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 etName.setTextColor(Color.BLACK);
-                etName.setHintTextColor(Color.BLACK);
+                etName.setHintTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorDefaultHint));
             }
 
             @Override
@@ -65,7 +66,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 etEmail.setTextColor(Color.BLACK);
-                etEmail.setHintTextColor(Color.BLACK);
+                etEmail.setHintTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorDefaultHint));
             }
 
             @Override
@@ -79,7 +80,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 etPass.setTextColor(Color.BLACK);
-                etPass.setHintTextColor(Color.BLACK);
+                etPass.setHintTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorDefaultHint));
             }
 
             @Override
@@ -93,7 +94,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 etConfPass.setTextColor(Color.BLACK);
-                etConfPass.setHintTextColor(Color.BLACK);
+                etConfPass.setHintTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorDefaultHint));
             }
 
             @Override

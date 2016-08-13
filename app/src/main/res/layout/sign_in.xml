@@ -15,7 +15,7 @@
         android:hint="@string/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress|textPersonName"
+        android:inputType="textEmailAddress"
         android:ems="10"
         android:layout_marginTop="160dp"
         android:layout_alignParentTop="true"
@@ -48,6 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/logIn"
+        android:enabled="false"
         android:id="@+id/sign_btnSignIn"
         android:layout_above="@+id/tvRegister"
         android:layout_centerHorizontal="true"
@@ -70,5 +71,16 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="57dp" />
+
+    <TextView
+        android:id="@+id/sign_tvConnectionInfo"
+        android:textColor="@color/colorGray"
+        android:text="@string/connectingToServer"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sign_tvRegSucc"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

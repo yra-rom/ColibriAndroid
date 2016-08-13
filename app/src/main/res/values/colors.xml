@@ -6,4 +6,6 @@
     <color name="colorMyBlue">#00ccff</color>
     <color name="colorRed">#ff0004</color>
     <color name="colorGreen">#00ff00</color>
+    <color name="colorGray">#a3a3a3</color>
+    <color name="colorDefaultHint">#808080</color>
 </resources>

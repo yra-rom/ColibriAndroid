@@ -19,6 +19,8 @@ import com.example.plague.app090816registration.clients.SendKeys;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
     public static final String TAG = "RegistrationActivity";
@@ -54,12 +56,17 @@ public class RegistrationActivity extends AppCompatActivity {
                 String confPass = etConfPass.getText().toString();
 
                 tvWrongConfPass.setText("");
-                if(name.equals("")){etName.setHintTextColor(Color.RED);}
-                else if(mail.equals("")){etEmail.setHintTextColor(Color.RED);}
-                else if(pass.equals("")){etPass.setHintTextColor(Color.RED);}
-                else if(confPass.equals("")){etConfPass.setHintTextColor(Color.RED);}
-                else if(!pass.equals(confPass)){tvWrongConfPass.setText(R.string.passNotEqual);}
-                else{
+                if(name.equals("")){
+                    etName.setHintTextColor(Color.RED);
+                } else if(! checkEmailLocal(mail)){
+                    etEmail.setHintTextColor(Color.RED);
+                } else if(! checkPassLocal(pass)){
+                    etPass.setHintTextColor(Color.RED);
+                } else if(! checkPassLocal(confPass)){
+                    etConfPass.setHintTextColor(Color.RED);
+                } else if(!pass.equals(confPass)){
+                    tvWrongConfPass.setText(R.string.passNotEqual);
+                } else{
                     if(checkEmailIsFree(mail)){
                         Intent intent = new Intent();
                         intent.putExtra(SendKeys.EMAIL, mail);
@@ -72,6 +79,23 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         );
+    }
+
+    private boolean checkPassLocal(String pass) {
+        int l = pass.length();
+        return l > 4 && l < 17;
+    }
+
+    private boolean checkEmailLocal(String email){
+        int l = email.length();
+        if(l < 3 || l > 32){
+            return false;
+        }
+
+        //checking with regex
+        Pattern p = Pattern.compile(".+@.+");
+        Matcher m = p.matcher(email);
+        return m.matches();
     }
 
     private void addTextChangeListeners() {

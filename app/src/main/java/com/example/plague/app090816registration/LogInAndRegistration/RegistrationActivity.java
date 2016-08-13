@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
-
     public static final String TAG = "RegistrationActivity";
+
     private EditText etName;
     private EditText etEmail;
     private EditText etPass;
@@ -45,6 +45,36 @@ public class RegistrationActivity extends AppCompatActivity {
         tvWrongConfPass = (TextView) findViewById(R.id.reg_tvWrongConfPass);
         btnReg = (Button) findViewById(R.id.reg_btnRegister);
 
+        addTextChangeListeners();
+
+        btnReg.setOnClickListener( (View v) -> {
+                String name = etName.getText().toString();
+                String mail = etEmail.getText().toString();
+                String pass = etPass.getText().toString();
+                String confPass = etConfPass.getText().toString();
+
+                tvWrongConfPass.setText("");
+                if(name.equals("")){etName.setHintTextColor(Color.RED);}
+                else if(mail.equals("")){etEmail.setHintTextColor(Color.RED);}
+                else if(pass.equals("")){etPass.setHintTextColor(Color.RED);}
+                else if(confPass.equals("")){etConfPass.setHintTextColor(Color.RED);}
+                else if(!pass.equals(confPass)){tvWrongConfPass.setText(R.string.passNotEqual);}
+                else{
+                    if(checkEmailIsFree(mail)){
+                        Intent intent = new Intent();
+                        intent.putExtra(SendKeys.EMAIL, mail);
+                        setResult(registerUser(name, mail, pass) ? RESULT_OK : RESULT_CANCELED, intent);
+                        finish();
+                    }else{
+                        tvWrongConfPass.setText(R.string.emailIsUsed);
+                        etEmail.setTextColor(Color.RED);
+                    }
+                }
+            }
+        );
+    }
+
+    private void addTextChangeListeners() {
         etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -100,51 +130,9 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
-
-        btnReg.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                String name = etName.getText().toString();
-                String mail = etEmail.getText().toString();
-                String pass = etPass.getText().toString();
-                String confPass = etConfPass.getText().toString();
-
-                tvWrongConfPass.setText("");
-                if(name.equals("")){etName.setHintTextColor(Color.RED);}
-                else if(mail.equals("")){etEmail.setHintTextColor(Color.RED);}
-                else if(pass.equals("")){etPass.setHintTextColor(Color.RED);}
-                else if(confPass.equals("")){etConfPass.setHintTextColor(Color.RED);}
-                else if(!pass.equals(confPass)){tvWrongConfPass.setText(R.string.passNotEqual);}
-                else{
-                    if(checkEmailIsFree(mail)){
-//                        registerUser(name, mail, pass);
-//                        Intent intent = new Intent();
-//                        intent.putExtra(SendKeys.EMAIL, mail);
-//                        setResult(RESULT_OK, intent);
-//                        finish();
-
-                        Intent intent = new Intent();
-                        intent.putExtra(SendKeys.EMAIL, mail);
-                        setResult(registerUser(name, mail, pass) ? RESULT_OK : RESULT_CANCELED, intent);
-                        finish();
-
-                    }
-                    else{
-                        tvWrongConfPass.setText(R.string.emailIsUsed);
-                        etEmail.setTextColor(Color.RED);
-                    }
-                }
-            }
-        });
-
     }
 
     private boolean checkEmailIsFree(String email) {
-        //TO DO
-        //connect with server
-        //check if email is not used
         Map map = new HashMap<String, String>();
         map.put(SendKeys.TITLE, SendKeys.CHECK_MAIL);
         map.put(SendKeys.EMAIL, email);
@@ -177,9 +165,5 @@ public class RegistrationActivity extends AppCompatActivity {
         signThread.interrupt();
 
         return signThread.getAnswer();
-
-        //TO DO
-        //connect with server
-        //save new user
     }
 }

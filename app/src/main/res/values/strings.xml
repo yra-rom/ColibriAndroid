@@ -13,5 +13,12 @@
     <string name="emailIsUsed">Current e-mail is already used</string>
     <string name="noConnection">No Connection With Server</string>
     <string name="connectingToServer">Connecting To Server...</string>
+    <string name="wrongPass">Wrong Password</string>
+    <string name="wrongEmail">Wrong Email</string>
+    <string name="inputRName">Please, input right name</string>
+    <string name="inputREmail">Please, input right E-mail</string>
+    <string name="inputRPass">Please, right valid password</string>
+    <string name="inputRConfPass">Please, input valid confirmation password</string>
+    <string name="infoAboutRightPass">Right E-mail should have from 5 to 16 characters</string>
 
 </resources>

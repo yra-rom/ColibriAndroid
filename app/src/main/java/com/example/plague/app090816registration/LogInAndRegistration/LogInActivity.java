@@ -25,11 +25,16 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
     private EditText etEmail;
     private EditText etPassword;
-    private Button btnSignIn;
+
     private TextView tvRegister;
-    private CheckBox cbKeepLogged;
     private TextView tvRegSucc;
     private TextView tvConnInfo;
+    private TextView tvLoginInfo;
+
+    private Button btnSignIn;
+
+    private CheckBox cbKeepLogged;
+
 
     private CheckConnectionThread chConn;
 
@@ -38,6 +43,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in);
         initViews();
+        startCheckingConnection();
     }
 
     @Override
@@ -55,15 +61,15 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private void initViews() {
         etEmail = (EditText) findViewById(R.id.sign_etEmail);
         etPassword = (EditText) findViewById(R.id.sign_etPassword);
-        btnSignIn = (Button) findViewById(R.id.sign_btnSignIn);
+
         tvRegister = (TextView) findViewById(R.id.tvRegister);
-        cbKeepLogged = (CheckBox) findViewById(R.id.sign_cbKeepLogged);
         tvRegSucc = (TextView) findViewById(R.id.sign_tvRegSucc);
         tvConnInfo = (TextView) findViewById(R.id.sign_tvConnectionInfo);
+        tvLoginInfo = (TextView) findViewById(R.id.sign_tvLoginInfo);
 
-        Log.d(TAG, String.valueOf(etEmail.getHintTextColors()));
+        btnSignIn = (Button) findViewById(R.id.sign_btnSignIn);
 
-        startCheckingConnection();
+        cbKeepLogged = (CheckBox) findViewById(R.id.sign_cbKeepLogged);
 
         btnSignIn.setOnClickListener(this);
         tvRegister.setOnClickListener(this);
@@ -129,22 +135,21 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         Check ch = Check.getInstance();
         if(ch.checkEmail(email)){
             if(ch.checkPassword(email, pass)){
-                //if user and password are correct and
                 if(cbKeepLogged.isChecked()){
-                    //remember users nick and pass
                     rememberUser(email, pass);
                 }
                 Log.d(TAG,"Imitating that user successfully logged in");
+
                 //TO DO Activity when is logged in
             }else{
-                //if user is correct BUT password is not correct
                 etPassword.setTextColor(Color.RED);
                 etPassword.setHintTextColor(Color.RED);
+                tvLoginInfo.setText(R.string.wrongPass);
             }
         }else{
-            //if user is not correct
             etEmail.setTextColor(Color.RED);
             etEmail.setHintTextColor(Color.RED);
+            tvLoginInfo.setText(R.string.wrongEmail);
         }
     }
 

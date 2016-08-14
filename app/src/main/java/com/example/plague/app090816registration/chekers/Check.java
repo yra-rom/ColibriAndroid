@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class Check {
     public static final String TAG= "Check";
 
-    public static Check instance = new Check();
+    private static Check instance = new Check();
     public static Check getInstance() {
         return instance;
     }
@@ -81,7 +81,6 @@ public class Check {
         int l = pass.length();
         return l > 4 && l < 17;
     }
-
 
     public boolean checkEmailIsFree(String email) {
         Map map = new HashMap<String, String>();

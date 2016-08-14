@@ -82,5 +82,14 @@
         android:layout_below="@+id/sign_tvRegSucc"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:id="@+id/sign_tvLoginInfo"
+        android:textColor="@color/colorRed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_above="@+id/sign_btnSignIn"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

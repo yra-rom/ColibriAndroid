@@ -29,7 +29,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText etPass;
     private EditText etConfPass;
     private Button btnReg;
-    private TextView tvWrongConfPass;
+    private TextView tvRegInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class RegistrationActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.reg_etEmail);
         etPass = (EditText) findViewById(R.id.sign_etPassword);
         etConfPass = (EditText) findViewById(R.id.reg_etConfirmPassword);
-        tvWrongConfPass = (TextView) findViewById(R.id.reg_tvWrongConfPass);
+        tvRegInfo = (TextView) findViewById(R.id.reg_tvRegInfo);
         btnReg = (Button) findViewById(R.id.reg_btnRegister);
 
         addTextChangeListeners();
@@ -56,17 +56,23 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 Check ch = Check.getInstance();
 
-                tvWrongConfPass.setText("");
+                tvRegInfo.setText("");
                 if(name.equals("")){
                     etName.setHintTextColor(Color.RED);
-                } else if(! ch.checkEmail(email)){
+                    tvRegInfo.setText(R.string.inputRName);
+                } else if(! ch.checkEmailLocal(email)){
                     etEmail.setHintTextColor(Color.RED);
-                } else if(! ch.checkPassword(email, pass)){
+                    tvRegInfo.setText(R.string.inputREmail);
+                } else if(! ch.checkPasswordLocal(pass)){
                     etPass.setHintTextColor(Color.RED);
-                } else if(! ch.checkPassword(email, confPass)){
+                    tvRegInfo.setText(R.string.inputRPass);
+                    tvRegInfo.append("\n");
+                    tvRegInfo.append(getResources().getString(R.string.infoAboutRightPass));
+                } else if(! ch.checkPasswordLocal(confPass)){
                     etConfPass.setHintTextColor(Color.RED);
+                    tvRegInfo.setText(R.string.inputRConfPass);
                 } else if(!pass.equals(confPass)){
-                    tvWrongConfPass.setText(R.string.passNotEqual);
+                    tvRegInfo.setText(R.string.passNotEqual);
                 } else{
                     if(ch.checkEmailIsFree(email)){
                         Intent intent = new Intent();
@@ -74,7 +80,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         setResult(registerUser(name, email, pass) ? RESULT_OK : RESULT_CANCELED, intent);
                         finish();
                     }else{
-                        tvWrongConfPass.setText(R.string.emailIsUsed);
+                        tvRegInfo.setText(R.string.emailIsUsed);
                         etEmail.setTextColor(Color.RED);
                     }
                 }

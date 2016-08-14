@@ -53,12 +53,13 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
+        android:id="@+id/reg_tvRegInfo"
+        android:textColor="@color/colorRed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/reg_tvWrongConfPass"
-        android:textColor="@color/colorRed"
         android:layout_below="@+id/reg_etConfirmPassword"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp" />
 
 
 </RelativeLayout>

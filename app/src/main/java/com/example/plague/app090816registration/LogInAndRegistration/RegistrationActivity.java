@@ -14,13 +14,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.chekers.Check;
 import com.example.plague.app090816registration.clients.LogInThread;
 import com.example.plague.app090816registration.clients.SendKeys;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
     public static final String TAG = "RegistrationActivity";
@@ -51,26 +50,28 @@ public class RegistrationActivity extends AppCompatActivity {
 
         btnReg.setOnClickListener( (View v) -> {
                 String name = etName.getText().toString();
-                String mail = etEmail.getText().toString();
+                String email = etEmail.getText().toString();
                 String pass = etPass.getText().toString();
                 String confPass = etConfPass.getText().toString();
+
+                Check ch = Check.getInstance();
 
                 tvWrongConfPass.setText("");
                 if(name.equals("")){
                     etName.setHintTextColor(Color.RED);
-                } else if(! checkEmailLocal(mail)){
+                } else if(! ch.checkEmail(email)){
                     etEmail.setHintTextColor(Color.RED);
-                } else if(! checkPassLocal(pass)){
+                } else if(! ch.checkPassword(email, pass)){
                     etPass.setHintTextColor(Color.RED);
-                } else if(! checkPassLocal(confPass)){
+                } else if(! ch.checkPassword(email, confPass)){
                     etConfPass.setHintTextColor(Color.RED);
                 } else if(!pass.equals(confPass)){
                     tvWrongConfPass.setText(R.string.passNotEqual);
                 } else{
-                    if(checkEmailIsFree(mail)){
+                    if(ch.checkEmailIsFree(email)){
                         Intent intent = new Intent();
-                        intent.putExtra(SendKeys.EMAIL, mail);
-                        setResult(registerUser(name, mail, pass) ? RESULT_OK : RESULT_CANCELED, intent);
+                        intent.putExtra(SendKeys.EMAIL, email);
+                        setResult(registerUser(name, email, pass) ? RESULT_OK : RESULT_CANCELED, intent);
                         finish();
                     }else{
                         tvWrongConfPass.setText(R.string.emailIsUsed);
@@ -79,23 +80,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         );
-    }
-
-    private boolean checkPassLocal(String pass) {
-        int l = pass.length();
-        return l > 4 && l < 17;
-    }
-
-    private boolean checkEmailLocal(String email){
-        int l = email.length();
-        if(l < 3 || l > 32){
-            return false;
-        }
-
-        //checking with regex
-        Pattern p = Pattern.compile(".+@.+");
-        Matcher m = p.matcher(email);
-        return m.matches();
     }
 
     private void addTextChangeListeners() {
@@ -154,22 +138,6 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
-    }
-
-    private boolean checkEmailIsFree(String email) {
-        Map map = new HashMap<String, String>();
-        map.put(SendKeys.TITLE, SendKeys.CHECK_MAIL);
-        map.put(SendKeys.EMAIL, email);
-
-        LogInThread signThread = new LogInThread(map);
-        signThread.start();
-        while(signThread.getAnswer()==null); // potential dead loop!!!
-        Log.d(TAG, "Server's answer is: " + signThread.getAnswer());
-
-        signThread.close();
-        signThread.interrupt();
-
-        return !signThread.getAnswer();
     }
 
     private Boolean registerUser(String name, String email, String pass) {

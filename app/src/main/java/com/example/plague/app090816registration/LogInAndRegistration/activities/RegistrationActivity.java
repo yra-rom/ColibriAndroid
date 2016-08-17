@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.LogInAndRegistration;
+package com.example.plague.app090816registration.LogInAndRegistration.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,9 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.chekers.Check;
-import com.example.plague.app090816registration.clients.LogInThread;
-import com.example.plague.app090816registration.clients.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.chekers.Check;
+import com.example.plague.app090816registration.LogInAndRegistration.clients.LogInThread;
+import com.example.plague.app090816registration.connection_defaults.SendKeys;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,9 @@
-package com.example.plague.app090816registration.chekers;
+package com.example.plague.app090816registration.connection_defaults.chekers;
 
 import android.util.Log;
 
-import com.example.plague.app090816registration.clients.LogInThread;
-import com.example.plague.app090816registration.clients.SendKeys;
+import com.example.plague.app090816registration.LogInAndRegistration.clients.LogInThread;
+import com.example.plague.app090816registration.connection_defaults.SendKeys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Check {
-    public static final String TAG= "Check";
+    public static final String TAG = "Check";
 
     private static Check instance = new Check();
     public static Check getInstance() {

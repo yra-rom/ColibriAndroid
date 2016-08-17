@@ -1,9 +1,10 @@
-package com.example.plague.app090816registration.LogInAndRegistration;
+package com.example.plague.app090816registration.LogInAndRegistration.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -16,9 +17,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.chekers.Check;
-import com.example.plague.app090816registration.clients.CheckConnectionThread;
-import com.example.plague.app090816registration.clients.SendKeys;
+import com.example.plague.app090816registration.WhoAmI;
+import com.example.plague.app090816registration.connection_defaults.CheckConnectionThread;
+import com.example.plague.app090816registration.connection_defaults.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.chekers.Check;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG = "LogInActivity";
@@ -34,7 +36,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private Button btnSignIn;
 
     private CheckBox cbKeepLogged;
-
 
     private CheckConnectionThread chConn;
 
@@ -132,7 +133,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     private void logInUser() {
         String email = etEmail.getText().toString();
         String pass = etPassword.getText().toString();
+
         Check ch = Check.getInstance();
+
         if(ch.checkEmail(email)){
             if(ch.checkPassword(email, pass)){
                 if(cbKeepLogged.isChecked()){
@@ -140,7 +143,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 }
                 Log.d(TAG,"Imitating that user successfully logged in");
 
+                String nick = "test";
+                WhoAmI whoAmI = new WhoAmI(email);
                 //TO DO Activity when is logged in
+                //TO DO when new activity will start start Receive Threads
+                //TO DO when choose person to dialog send new Send Thread
             }else{
                 etPassword.setTextColor(Color.RED);
                 etPassword.setHintTextColor(Color.RED);
@@ -153,13 +160,18 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void rememberUser(String key1, String key2) {
-        SharedPreferences sharedPrefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sharedPrefs.edit();
-        ed.putString(SendKeys.EMAIL, key1);
-        ed.commit();
-        ed.putString(SendKeys.PASS, key2);
-        ed.commit();
+    private void rememberUser(String email, String pass) {
+//        SharedPreferences sharedPrefs = getPreferences(MODE_PRIVATE);
+//        SharedPreferences.Editor ed = sharedPrefs.edit();
+//        ed.putString(SendKeys.EMAIL, email);
+//        ed.putString(SendKeys.PASS, pass);
+//        ed.commit();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(SendKeys.EMAIL, email);
+        editor.putString(SendKeys.PASS, pass);
+        editor.commit();
     }
 
     @Override
@@ -183,22 +195,18 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void setConnectionOFF(){
-        runOnUiThread( () ->
-            {
+        runOnUiThread( () -> {
                 btnSignIn.setEnabled(false);
                 tvRegister.setEnabled(false);
                 tvConnInfo.setVisibility(View.VISIBLE);
-            }
-        );
+        });
     }
 
     public void setConnectionON() {
-        runOnUiThread(() ->
-            {
+        runOnUiThread(() -> {
                 btnSignIn.setEnabled(true);
                 tvRegister.setEnabled(true);
                 tvConnInfo.setVisibility(View.INVISIBLE);
-            }
-        );
+        });
     }
 }

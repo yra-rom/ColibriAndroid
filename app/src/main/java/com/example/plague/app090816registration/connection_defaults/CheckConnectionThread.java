@@ -1,8 +1,8 @@
-package com.example.plague.app090816registration.clients;
+package com.example.plague.app090816registration.connection_defaults;
 
 import android.util.Log;
 
-import com.example.plague.app090816registration.LogInAndRegistration.LogInActivity;
+import com.example.plague.app090816registration.LogInAndRegistration.activities.LogInActivity;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,9 +11,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 public class CheckConnectionThread extends Thread {
-    public static final String HOST = "192.168.43.142";
-    //    public static final String HOST = "192.168.2.4";
-    public static final int PORT = 5679;
+    public static final String HOST = Ports.HOST;
+    public static final int PORT = Ports.CHECK_CONNECTION;
     public static final String TAG = "CheckConnectionThread";
 
     private static Socket connection;

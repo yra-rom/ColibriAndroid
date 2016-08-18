@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Some Text"
+        android:id="@+id/itemFrnd_tvName"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="35dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="15dp" />
+
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:id="@+id/itemFrnd_ivOnline"
+        android:visibility="invisible"
+        android:src = "@drawable/online"
+        android:layout_marginRight="29dp"
+        android:layout_marginEnd="29dp"
+        android:layout_alignBottom="@id/itemFrnd_tvName"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="22dp" />
+</RelativeLayout>

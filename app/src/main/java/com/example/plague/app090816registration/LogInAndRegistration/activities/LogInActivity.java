@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.Tabs.TabsActivity;
 import com.example.plague.app090816registration.WhoAmI;
 import com.example.plague.app090816registration.connection_defaults.CheckConnectionThread;
 import com.example.plague.app090816registration.connection_defaults.SendKeys;
@@ -141,10 +141,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 if(cbKeepLogged.isChecked()){
                     rememberUser(email, pass);
                 }
-                Log.d(TAG,"Imitating that user successfully logged in");
-
                 String nick = "test";
                 WhoAmI whoAmI = new WhoAmI(email);
+                Intent intent = new Intent(this, TabsActivity.class);
+                startActivity(intent);
                 //TO DO Activity when is logged in
                 //TO DO when new activity will start start Receive Threads
                 //TO DO when choose person to dialog send new Send Thread
@@ -195,18 +195,24 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void setConnectionOFF(){
-        runOnUiThread( () -> {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
                 btnSignIn.setEnabled(false);
                 tvRegister.setEnabled(false);
                 tvConnInfo.setVisibility(View.VISIBLE);
+            }
         });
     }
 
     public void setConnectionON() {
-        runOnUiThread(() -> {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
                 btnSignIn.setEnabled(true);
                 tvRegister.setEnabled(true);
                 tvConnInfo.setVisibility(View.INVISIBLE);
+            }
         });
     }
 }

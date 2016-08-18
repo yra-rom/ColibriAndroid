@@ -5,11 +5,10 @@ import com.example.plague.app090816registration.WhoAmI;
 import java.util.HashMap;
 
 public class Messaging {
-    private static HashMap<String, Message> messages;
+    private static HashMap<String, Message> messages  = new HashMap<>();;
     private static Object lock = new Object();
 
     public Messaging(WhoAmI whoAmI) {
-        messages = new HashMap<>();
         new ReceiveThread(whoAmI).start();
     }
 

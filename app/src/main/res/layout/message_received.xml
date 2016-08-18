@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rcd_layout"
+    android:background="@color/colorReceived"
+    android:gravity="left"
+    android:orientation="vertical"
+    android:paddingBottom="1dp"
+    android:paddingTop="1dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="0dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/rcd_tvMsg"
+        android:textColor="@color/colorBlack"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/rcd_tvMsgInfo"
+        android:textColor="@color/colorGray"
+        android:textSize="10sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

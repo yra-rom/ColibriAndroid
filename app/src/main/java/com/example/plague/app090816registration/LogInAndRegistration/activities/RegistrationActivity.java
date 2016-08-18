@@ -13,10 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.connection_defaults.chekers.Check;
 import com.example.plague.app090816registration.LogInAndRegistration.clients.LogInThread;
+import com.example.plague.app090816registration.R;
 import com.example.plague.app090816registration.connection_defaults.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.chekers.Check;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,43 +48,46 @@ public class RegistrationActivity extends AppCompatActivity {
 
         addTextChangeListeners();
 
-        btnReg.setOnClickListener( (View v) -> {
-                String name = etName.getText().toString();
-                String email = etEmail.getText().toString();
-                String pass = etPass.getText().toString();
-                String confPass = etConfPass.getText().toString();
+        btnReg.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  String name = etName.getText().toString();
+                  String email = etEmail.getText().toString();
+                  String pass = etPass.getText().toString();
+                  String confPass = etConfPass.getText().toString();
 
-                Check ch = Check.getInstance();
+                  Check ch = Check.getInstance();
 
-                tvRegInfo.setText("");
-                if(name.equals("")){
-                    etName.setHintTextColor(Color.RED);
-                    tvRegInfo.setText(R.string.inputRName);
-                } else if(! ch.checkEmailLocal(email)){
-                    etEmail.setHintTextColor(Color.RED);
-                    tvRegInfo.setText(R.string.inputREmail);
-                } else if(! ch.checkPasswordLocal(pass)){
-                    etPass.setHintTextColor(Color.RED);
-                    tvRegInfo.setText(R.string.inputRPass);
-                    tvRegInfo.append("\n");
-                    tvRegInfo.append(getResources().getString(R.string.infoAboutRightPass));
-                } else if(! ch.checkPasswordLocal(confPass)){
-                    etConfPass.setHintTextColor(Color.RED);
-                    tvRegInfo.setText(R.string.inputRConfPass);
-                } else if(!pass.equals(confPass)){
-                    tvRegInfo.setText(R.string.passNotEqual);
-                } else{
-                    if(ch.checkEmailIsFree(email)){
-                        Intent intent = new Intent();
-                        intent.putExtra(SendKeys.EMAIL, email);
-                        setResult(registerUser(name, email, pass) ? RESULT_OK : RESULT_CANCELED, intent);
-                        finish();
-                    }else{
-                        tvRegInfo.setText(R.string.emailIsUsed);
-                        etEmail.setTextColor(Color.RED);
-                    }
-                }
-            }
+                  tvRegInfo.setText("");
+                  if(name.equals("")){
+                      etName.setHintTextColor(Color.RED);
+                      tvRegInfo.setText(R.string.inputRName);
+                  } else if(! ch.checkEmailLocal(email)){
+                      etEmail.setHintTextColor(Color.RED);
+                      tvRegInfo.setText(R.string.inputREmail);
+                  } else if(! ch.checkPasswordLocal(pass)){
+                      etPass.setHintTextColor(Color.RED);
+                      tvRegInfo.setText(R.string.inputRPass);
+                      tvRegInfo.append("\n");
+                      tvRegInfo.append(getResources().getString(R.string.infoAboutRightPass));
+                  } else if(! ch.checkPasswordLocal(confPass)){
+                      etConfPass.setHintTextColor(Color.RED);
+                      tvRegInfo.setText(R.string.inputRConfPass);
+                  } else if(!pass.equals(confPass)){
+                      tvRegInfo.setText(R.string.passNotEqual);
+                  } else{
+                      if(ch.checkEmailIsFree(email)){
+                          Intent intent = new Intent();
+                          intent.putExtra(SendKeys.EMAIL, email);
+                          setResult(registerUser(name, email, pass) ? RESULT_OK : RESULT_CANCELED, intent);
+                          finish();
+                      }else{
+                          tvRegInfo.setText(R.string.emailIsUsed);
+                          etEmail.setTextColor(Color.RED);
+                      }
+                  }
+              }
+          }
         );
     }
 

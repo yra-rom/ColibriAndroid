@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frndInfo_ivAvatar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frndInfo_tvLastOnline"
+        android:layout_below="@id/frndInfo_ivAvatar"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frndInfo_tvNick"
+        android:layout_below="@+id/frndInfo_tvLastOnline"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startChat"
+        android:id="@+id/frndInfo_btnChat"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/frndInfo_btnCall"
+        android:layout_toStartOf="@+id/frndInfo_btnCall"
+        android:layout_marginRight="47dp"
+        android:layout_marginEnd="38dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/call"
+        android:id="@+id/frndInfo_btnCall"
+        android:layout_alignTop="@+id/frndInfo_btnChat"
+        android:layout_toRightOf="@+id/frndInfo_tvNick"
+        android:layout_toEndOf="@+id/frndInfo_tvNick"
+        android:layout_marginLeft="47dp"
+        android:layout_marginStart="47dp" />
+</RelativeLayout>

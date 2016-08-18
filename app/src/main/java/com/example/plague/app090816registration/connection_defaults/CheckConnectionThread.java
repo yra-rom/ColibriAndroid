@@ -23,8 +23,10 @@ public class CheckConnectionThread extends Thread {
 
     private Thread refreshConnectionState;
 
-    public CheckConnectionThread(LogInActivity activity){
-        refreshConnectionState = new Thread( () -> {
+    public CheckConnectionThread(final LogInActivity activity){
+        refreshConnectionState = new Thread(new Runnable() {
+            @Override
+            public void run() {
                 while (!isInterrupted()) {
                     if (currentState) {
                         activity.setConnectionON();
@@ -38,6 +40,7 @@ public class CheckConnectionThread extends Thread {
                         activity.setConnectionOFF();
                     }
                 }
+            }
         });
         refreshConnectionState.start();
     }

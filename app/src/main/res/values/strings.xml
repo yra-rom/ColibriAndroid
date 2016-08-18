@@ -20,5 +20,9 @@
     <string name="inputRPass">Please, right valid password</string>
     <string name="inputRConfPass">Please, input valid confirmation password</string>
     <string name="infoAboutRightPass">Right E-mail should have from 5 to 16 characters</string>
+    <string name="send">Send</string>
+    <string name="enterMsg">Enter your message here...</string>
+    <string name="startChat">Start Chat</string>
+    <string name="call">Call</string>
 
 </resources>

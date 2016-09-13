@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.Messaging.clients;
+package com.example.plague.app090816registration.Messaging.MessagePak;
 
 public class Message{
     private String message;
@@ -6,11 +6,11 @@ public class Message{
     private String from;
     private String to;
 
-    public Message(String message, String time, String from, String to) {
-        this.message = message;
-        this.time = time;
-        this.from = from;
-        this.to = to;
+    Message(MessageBuilder builder){
+        this.message = builder.getMessage();
+        this.time = builder.getTime();
+        this.from = builder.getFrom();
+        this.to = builder.getTo();
     }
 
     public String getMessage() {
@@ -28,4 +28,5 @@ public class Message{
     public String getTo() {
         return to;
     }
+
 }

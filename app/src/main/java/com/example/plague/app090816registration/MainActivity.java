@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.plague.app090816registration.LogInAndRegistration.activities.LogInActivity;
+import com.example.plague.app090816registration.LogIn.activities.LogInActivity;
 import com.example.plague.app090816registration.Tabs.TabsActivity;
-import com.example.plague.app090816registration.connection_defaults.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 public class MainActivity extends AppCompatActivity{
     public static final String TAG = "MainActivity";
@@ -22,12 +22,13 @@ public class MainActivity extends AppCompatActivity{
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String s1 = preferences.getString(SendKeys.EMAIL, "");
         String s2 = preferences.getString(SendKeys.PASS, "");
-//        String s1 = "";
-//        String s2 = "";
+
         if(s1.equals("") || s2.equals("")){
-            startActivity(new Intent(this, LogInActivity.class));
+            startActivity( new Intent(this, LogInActivity.class) );
         }else {
-            startActivity(new Intent(this, TabsActivity.class));
+            Intent intent = new Intent(this, TabsActivity.class);
+            intent.putExtra(SendKeys.EMAIL, s1);
+            startActivity(intent);
         }
     }
 

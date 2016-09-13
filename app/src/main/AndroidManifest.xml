@@ -22,10 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LogInAndRegistration.activities.LogInActivity"/>
-        <activity android:name=".LogInAndRegistration.activities.RegistrationActivity"/>
+        <activity android:name=".LogIn.activities.LogInActivity"/>
+        <activity android:name=".Registration.activities.RegistrationActivity"/>
         <activity android:name=".Messaging.activities.MessagesActivity" android:theme="@style/MessageTheme"/>
-        <activity android:name=".FriendInfoActivity" android:theme="@style/MessageTheme"/>
+        <activity android:name=".Tabs.FriendInfoActivity" android:theme="@style/MessageTheme"/>
         <activity android:name=".Tabs.TabsActivity" android:theme="@style/MyMaterialTheme.Base"/>
 
     </application>

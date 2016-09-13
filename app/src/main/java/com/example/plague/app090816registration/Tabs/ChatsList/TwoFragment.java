@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.Tabs.Chats;
+package com.example.plague.app090816registration.Tabs.ChatsList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.example.plague.app090816registration.Messaging.activities.MessagesActivity;
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.connection_defaults.SendKeys;
+import com.example.plague.app090816registration.Tabs.MessageHandler;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +22,14 @@ public class TwoFragment extends Fragment {
     private ListView lvChats;
     private List<ChatItem> items;
     private ChatsAdapter adapter;
+    private MessageHandler handler;
 
     public TwoFragment() {
         // Required empty public constructor
+    }
+
+    public void setHandler(MessageHandler handler) {
+        this.handler = handler;
     }
 
     @Override
@@ -45,24 +52,10 @@ public class TwoFragment extends Fragment {
 
         //TO DO
         //connect to db and get your friends
+        new GetFriendsThread(items).start();
+
 
         /* Only for debug*/
-        items.add(new ChatItem("Masha", "some text from masha","21.52"));
-        items.add(new ChatItem("Yurii", "some text from yurii","12.29"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii2","some text from yurii" ,"00.01"));
-        items.add(new ChatItem("Yurii3","some text from yurii" ,"00.01"));
         /*---------------------------------------------------------------*/
 
         lvChats.setAdapter(adapter);
@@ -79,7 +72,8 @@ public class TwoFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ChatItem chatItem = (ChatItem) adapter.getItem(position);
                 Intent intent = new Intent(getActivity(), MessagesActivity.class);
-                intent.putExtra(SendKeys.NICK, chatItem.getNick());
+                intent.putExtra(SendKeys.NICK, chatItem.getEmail());
+                //intent.putExtra(SendKeys.HANDLER, handler);
                 startActivity(intent);
                 //To DO
                 //Activity when last chat was chosen
@@ -87,5 +81,4 @@ public class TwoFragment extends Fragment {
             }
         });
     }
-
 }

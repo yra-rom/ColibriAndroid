@@ -1,53 +1,35 @@
 package com.example.plague.app090816registration.Messaging.clients;
 
-import android.util.Log;
-
-import com.example.plague.app090816registration.WhoAmI;
-import com.example.plague.app090816registration.connection_defaults.Ports;
-import com.example.plague.app090816registration.connection_defaults.SendKeys;
+import com.example.plague.app090816registration.Messaging.MessagePak.Message;
+import com.example.plague.app090816registration.Messaging.MessagePak.MessageBuilder;
+import com.example.plague.app090816registration.Tabs.MessageHandler;
+import com.example.plague.app090816registration.connection_defaults.clients.ClientThread;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReceiveThread extends Thread {
+public class ReceiveThread extends ClientThread {
     private static final String TAG = "ReceiveThread";
-    public static final String HOST = Ports.HOST;
-    private static final int PORT = Ports.RECEIVE_MESSAGE;
 
-    private static Socket connection;
-    private static ObjectInputStream input;
-    private static ObjectOutputStream output;
+    private String whoAmI;
+    private MessageHandler handler;
 
-    private Message message;
-    private WhoAmI whoAmI;
-
-    public ReceiveThread(WhoAmI whoAmI) {
+    public ReceiveThread(MessageHandler handler, String whoAmI) {
+        this.handler = handler;
         this.whoAmI = whoAmI;
     }
 
     @Override
     public void run() {
         while(!isInterrupted()) {
-            try {
-                initConnection();
-                initStreams();
-                writeWho();
-                readMessage();
-                close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            super.run();
         }
     }
 
-    private void writeWho() throws IOException {
+    @Override
+    protected void write() throws IOException {
         while (whoAmI == null){
             try {
                 Thread.sleep(25);
@@ -56,49 +38,30 @@ public class ReceiveThread extends Thread {
             }
         }
         HashMap<String, String> map = new HashMap<>();
-        map.put(SendKeys.WHO, whoAmI.getEmail());
+        map.put(SendKeys.TITLE, SendKeys.WHO_AM_I);
+        map.put(SendKeys.WHO, whoAmI);
 
         output.flush();
         output.writeObject(map);
         output.flush();
     }
 
-    private void readMessage() throws IOException, ClassNotFoundException {
+    @Override
+    protected void read() throws IOException, ClassNotFoundException {
         Object o  = input.readObject();
         if(o instanceof Map){
             HashMap<String, String> map  = (HashMap) o;
             if(map.get(SendKeys.TITLE).equals(SendKeys.MESSAGE_RECEIVED)){
                 String text = map.get(SendKeys.MESSAGE);
-                String to = map.get(SendKeys.TO);
                 String from = map.get(SendKeys.FROM);
                 String time = map.get(SendKeys.TIME);
 
-                Message message = new Message(text, time, from, to);
-                Messaging.getMessages().put(from,message);
+                Message message = new MessageBuilder().message(text).time(time).from(from).to(whoAmI).build();
+                //Receiver.getMessages().put(from,message);
 
+                android.os.Message msg = handler.obtainMessage(SendKeys.NEW_MESSAGE_STATUS, message);
+                handler.sendMessage(msg);
             }
-        }
-    }
-
-
-    private void initStreams() throws IOException {
-        output = new ObjectOutputStream(connection.getOutputStream());
-        input = new ObjectInputStream(connection.getInputStream());
-    }
-
-    private void initConnection() throws IOException {
-        Log.d(TAG, "Started.");
-        Log.d(TAG, "About to connect...");
-        connection = new Socket(InetAddress.getByName(HOST), PORT);
-        Log.d(TAG, "Connected!");
-    }
-
-    public void close(){
-        try {
-            input.close();
-            output.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

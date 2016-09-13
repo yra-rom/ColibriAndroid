@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.Tabs.Friends;
+package com.example.plague.app090816registration.Tabs.FriendsList;
 
 import android.content.Context;
 import android.view.LayoutInflater;

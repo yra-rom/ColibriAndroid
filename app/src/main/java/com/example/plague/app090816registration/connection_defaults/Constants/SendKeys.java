@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.connection_defaults;
+package com.example.plague.app090816registration.connection_defaults.Constants;
 
 public interface SendKeys {
 
@@ -17,7 +17,7 @@ public interface SendKeys {
     //For registration
     String EMAIL = "EMAIL";
 
-    //For Messaging
+    //For Receiver
     String MESSAGE_SEND = "MESSAGE_SEND";
     String MESSAGE_RECEIVED = "MESSAGE_RECEIVED";
     String MESSAGE = "MESSAGE";
@@ -28,4 +28,16 @@ public interface SendKeys {
     String TIME = "TIME";
     String WHO = "WHO";
     String ACTIVITY = "ACTIVITY";
+
+    int NEW_MESSAGE_STATUS = 0;
+    String HANDLER = "HANDLER";
+
+    String GET_FRIENDS = "GET_FRIENDS";
+    String COUNT_FRIENDS = "COUNT_FRIENDS";
+
+    String FRIEND_NICK = "FRIEND_NICK";
+    String FRIEND_EMAIL = "FRIEND_EMAIL";
+    String FRIEND_LAST_ONLINE = "FRIEND_LAST_ONLINE";
+
+    String WHO_AM_I = "WHO_AM_I";
 }

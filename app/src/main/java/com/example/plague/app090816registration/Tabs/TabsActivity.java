@@ -1,16 +1,25 @@
 package com.example.plague.app090816registration.Tabs;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import com.example.plague.app090816registration.Messaging.Receiver;
+import com.example.plague.app090816registration.Messaging.clients.Status;
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.Tabs.Chats.TwoFragment;
-import com.example.plague.app090816registration.Tabs.Friends.OneFragment;
+import com.example.plague.app090816registration.Tabs.ChatsList.TwoFragment;
+import com.example.plague.app090816registration.Tabs.FriendsList.OneFragment;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,16 +29,24 @@ public class TabsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
+    private MessageHandler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Colibri");
         setContentView(R.layout.tabs_main);
 
+        //В майбутньому винести в сервіс
+        startReceivingMessages();
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -41,10 +58,22 @@ public class TabsActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    private void startReceivingMessages() {
+        handler = new MessageHandler();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String email =  prefs.getString(SendKeys.EMAIL, "");
+//        new Receiver(getIntent().getStringExtra(SendKeys.EMAIL), handler);
+        new Receiver(email, handler);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new OneFragment(), "Friends");
-        adapter.addFragment(new TwoFragment(), "Chats");
+        OneFragment one = new OneFragment();
+        one.setHandler(handler);
+        TwoFragment two = new TwoFragment();
+        two.setHandler(handler);
+        adapter.addFragment(one, "Friends");
+        adapter.addFragment(two, "Chats");
         viewPager.setAdapter(adapter);
     }
 
@@ -80,5 +109,12 @@ public class TabsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //override not to get back to login activity
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Message msg = handler.obtainMessage(Status.CH_WHERE_SHOW, Status.IN_SERVICE, 0, null);
+        handler.sendMessage(msg);
     }
 }

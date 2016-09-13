@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.LogInAndRegistration.activities;
+package com.example.plague.app090816registration.Registration.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,13 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.plague.app090816registration.LogInAndRegistration.clients.LogInThread;
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.connection_defaults.SendKeys;
+import com.example.plague.app090816registration.Registration.clients.RegistrationThread;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.UserPak.User;
+import com.example.plague.app090816registration.connection_defaults.UserPak.UserBuilder;
 import com.example.plague.app090816registration.connection_defaults.chekers.Check;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
     public static final String TAG = "RegistrationActivity";
@@ -79,7 +78,9 @@ public class RegistrationActivity extends AppCompatActivity {
                       if(ch.checkEmailIsFree(email)){
                           Intent intent = new Intent();
                           intent.putExtra(SendKeys.EMAIL, email);
-                          setResult(registerUser(name, email, pass) ? RESULT_OK : RESULT_CANCELED, intent);
+                          User user = new UserBuilder().name(name).email(email).pass(pass).build();
+                          setResult( registerUser(user) ? RESULT_OK : RESULT_CANCELED, intent);
+//                          setResult( registerUser(name, email, pass) ? RESULT_OK : RESULT_CANCELED, intent);
                           finish();
                       }else{
                           tvRegInfo.setText(R.string.emailIsUsed);
@@ -149,22 +150,27 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private Boolean registerUser(String name, String email, String pass) {
-        Map map = new HashMap<String, String>();
-        map.put(SendKeys.TITLE, SendKeys.REGISTER);
-        map.put(SendKeys.NICK, name);
-        map.put(SendKeys.EMAIL, email);
-        map.put(SendKeys.PASS, pass);
+    private Boolean registerUser(User user) {
+        RegistrationThread registration = new RegistrationThread(user);
+        registration.start();
 
+//        Map map = new HashMap<String, String>();
+//        map.put(SendKeys.TITLE, SendKeys.REGISTER);
+//        map.put(SendKeys.NICK, name);
+//        map.put(SendKeys.EMAIL, email);
+//        map.put(SendKeys.PASS, pass);
+//
+//
+//        CheckThread signThread = new CheckThread(map);
+//        signThread.start();
 
-        LogInThread signThread = new LogInThread(map);
-        signThread.start();
-        while(signThread.getAnswer()==null); // potential dead loop!!!
-        Log.d(TAG, "Server's answer is: " + signThread.getAnswer());
+        while(registration.getAnswer() == null); // potential dead loop!!!
+        Boolean answer = registration.getAnswer();
+        Log.d(TAG, "Server's answer is: " + answer);
 
-        signThread.close();
-        signThread.interrupt();
+        registration.close();
+        registration.interrupt();
 
-        return signThread.getAnswer();
+        return answer;
     }
 }

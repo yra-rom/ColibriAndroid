@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.LogInAndRegistration.activities;
+package com.example.plague.app090816registration.LogIn.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,10 +16,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.Registration.activities.RegistrationActivity;
 import com.example.plague.app090816registration.Tabs.TabsActivity;
-import com.example.plague.app090816registration.WhoAmI;
-import com.example.plague.app090816registration.connection_defaults.CheckConnectionThread;
-import com.example.plague.app090816registration.connection_defaults.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.clients.CheckConnectionThread;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 import com.example.plague.app090816registration.connection_defaults.chekers.Check;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
@@ -141,9 +141,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 if(cbKeepLogged.isChecked()){
                     rememberUser(email, pass);
                 }
-                String nick = "test";
-                WhoAmI whoAmI = new WhoAmI(email);
+                rememberMe(email);
                 Intent intent = new Intent(this, TabsActivity.class);
+                intent.putExtra(SendKeys.EMAIL, email);
                 startActivity(intent);
                 //TO DO Activity when is logged in
                 //TO DO when new activity will start start Receive Threads
@@ -158,6 +158,12 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             etEmail.setHintTextColor(Color.RED);
             tvLoginInfo.setText(R.string.wrongEmail);
         }
+    }
+
+    private void rememberMe(String email) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(SendKeys.EMAIL, email);
     }
 
     private void rememberUser(String email, String pass) {

@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.Tabs.Friends;
+package com.example.plague.app090816registration.Tabs.FriendsList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.example.plague.app090816registration.FriendInfoActivity;
+
+import com.example.plague.app090816registration.Tabs.FriendInfoActivity;
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.connection_defaults.SendKeys;
+import com.example.plague.app090816registration.Tabs.MessageHandler;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +23,14 @@ public class OneFragment extends Fragment{
     private ListView lvFriends;
     private List<FriendItem> items;
     private FriendAdapter adapter;
+    private MessageHandler handler;
 
-    public OneFragment() {
-        // Required empty public constructor
+
+    public OneFragment(){
+    }
+
+    public void setHandler(MessageHandler handler) {
+        this.handler = handler;
     }
 
     @Override
@@ -47,21 +54,21 @@ public class OneFragment extends Fragment{
         //TO DO
 
         /* Only for debug*/
-        items.add(new FriendItem("Masha",true));
-        items.add(new FriendItem("Masha",false));
-        items.add(new FriendItem("Yurii",true));
-        items.add(new FriendItem("Yurii2",true));
-        items.add(new FriendItem("Yurii3",true));
-        items.add(new FriendItem("Yurii4",true));
-        items.add(new FriendItem("Yurii5",true));
-        items.add(new FriendItem("Yurii6",true));
-        items.add(new FriendItem("Yurii7",true));
-        items.add(new FriendItem("Yurii8",true));
-        items.add(new FriendItem("Yurii9",false));
-        items.add(new FriendItem("Yurii10",true));
-        items.add(new FriendItem("Yurii11",false));
-        items.add(new FriendItem("Yurii12",true));
-        items.add(new FriendItem("Yurii13",false));
+        items.add(new FriendItemBuilder().name("Masha").online(true).build() );
+        items.add(new FriendItemBuilder().name("Masha").online(false).build() );
+        items.add(new FriendItemBuilder().name("Yurii").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii2").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii3").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii4").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii5").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii6").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii7").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii8").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii9").online(false).build() );
+        items.add(new FriendItemBuilder().name("Yurii10").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii11").online(false).build() );
+        items.add(new FriendItemBuilder().name("Yurii12").online(true).build() );
+        items.add(new FriendItemBuilder().name("Yurii13").online(true).build() );
         /*---------------------------------------------------------------*/
 
         lvFriends.setAdapter(adapter);

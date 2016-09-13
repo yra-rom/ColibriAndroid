@@ -1,8 +1,9 @@
-package com.example.plague.app090816registration;
+package com.example.plague.app090816registration.Tabs;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.plague.app090816registration.Messaging.activities.MessagesActivity;
+import com.example.plague.app090816registration.R;
 
 
 public class FriendInfoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -26,7 +28,11 @@ public class FriendInfoActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friend_info);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         initTitle();
         initViews();
         fillViews();

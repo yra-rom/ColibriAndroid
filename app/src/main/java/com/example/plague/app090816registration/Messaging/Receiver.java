@@ -17,4 +17,5 @@ public class Receiver {
     public static ConcurrentHashMap<String, ConcurrentLinkedQueue<Message>> getMessages() {
         return messages;
     }
+
 }

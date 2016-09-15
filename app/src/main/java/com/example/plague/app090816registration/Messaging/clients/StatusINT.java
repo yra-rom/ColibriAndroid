@@ -1,6 +1,6 @@
 package com.example.plague.app090816registration.Messaging.clients;
 
-public interface Status {
+public interface StatusINT {
 
     int MESSAGE_RECEIVED = 0;
     int CH_WHERE_SHOW = 1;

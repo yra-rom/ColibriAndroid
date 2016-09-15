@@ -6,35 +6,32 @@ import com.example.plague.app090816registration.connection_defaults.clients.Clie
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 public class RegistrationThread extends ClientThread{
     private User user;
     private Boolean answer = null;
+    public Boolean getAnswer() {
+        return answer;
+    }
 
     public RegistrationThread(User user){
         this.user = user;
     }
 
-    @Override
-    protected void write() throws IOException, ClassNotFoundException {
-        registerUser();
-    }
-
-    private void registerUser() {
-
+    private void registerUser() throws IOException {
         String name = user.getName();
         String email = user.getEmail();
         String pass = user.getPass();
 
-        HashMap map = new HashMap<String, String>();
+        HashMap map = new HashMap();
         map.put(SendKeys.TITLE, SendKeys.REGISTER);
         map.put(SendKeys.NICK, name);
         map.put(SendKeys.EMAIL, email);
         map.put(SendKeys.PASS, pass);
 
-
-
+        output.flush();
+        output.writeObject(map);
+        output.flush();
     }
 
     @Override
@@ -42,7 +39,8 @@ public class RegistrationThread extends ClientThread{
         answer = (Boolean) input.readObject();
     }
 
-    public Boolean getAnswer() {
-        return answer;
+    @Override
+    protected void write() throws IOException, ClassNotFoundException {
+        registerUser();
     }
 }

@@ -11,11 +11,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 abstract public class ClientThread extends Thread {
-    private static final String HOST = Client_Info.HOST;
-    private static final int PORT = Client_Info.MAIN_PORT;
+    protected static final String HOST = Client_Info.HOST;
+    protected static final int PORT = Client_Info.MAIN_PORT;
     private static final String TAG = "ClientThread";
 
-    private Socket connection;
+    protected Socket connection;
     protected ObjectInputStream input;
     protected ObjectOutputStream output;
 
@@ -32,12 +32,12 @@ abstract public class ClientThread extends Thread {
         }
     }
 
-    private void initStreams() throws IOException {
+    protected void initStreams() throws IOException {
         output = new ObjectOutputStream(connection.getOutputStream());
         input = new ObjectInputStream(connection.getInputStream());
     }
 
-    private void initConnection() throws IOException {
+    protected void initConnection() throws IOException {
         Log.d(TAG, "Started.");
         Log.d(TAG, "About to connect...");
         connection = new Socket(InetAddress.getByName(HOST), PORT);

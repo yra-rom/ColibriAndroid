@@ -38,7 +38,9 @@ public class SendThread extends ClientThread {
 
     @Override
     protected void read() throws IOException, ClassNotFoundException {
-        Boolean answ = (Boolean) input.readObject();
-        if(answ){confirmed = true;}
+        Boolean answer = (Boolean) input.readObject();
+        if(answer){
+            confirmed = true;
+        }
     }
 }

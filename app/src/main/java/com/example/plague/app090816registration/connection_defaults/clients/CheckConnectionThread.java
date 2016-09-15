@@ -3,8 +3,10 @@ package com.example.plague.app090816registration.connection_defaults.clients;
 import android.util.Log;
 
 import com.example.plague.app090816registration.LogIn.activities.LogInActivity;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class CheckConnectionThread extends ClientThread {
     public static final String TAG = "CheckConnectionThread";
@@ -35,9 +37,19 @@ public class CheckConnectionThread extends ClientThread {
 
     @Override
     public void run() {
-        while(!isInterrupted()) {
-            super.run();
+        try {
+            initConnection();
+            initStreams();
+
+            while (!isInterrupted()){
+                write();
+                read();
+            }
+
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
         }
+
         if(isInterrupted()) {
             refreshConnectionState.interrupt();
         }
@@ -45,8 +57,10 @@ public class CheckConnectionThread extends ClientThread {
 
     @Override
     protected void write() throws IOException, ClassNotFoundException {
+        HashMap map = new HashMap<>();
+        map.put(SendKeys.TITLE, SendKeys.I_AM_CONNECTED);
         output.flush();
-        output.writeObject(true);
+        output.writeObject(map);
         output.flush();
     }
 

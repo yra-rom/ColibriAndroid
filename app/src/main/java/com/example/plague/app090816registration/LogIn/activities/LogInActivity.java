@@ -164,6 +164,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(SendKeys.EMAIL, email);
+        editor.apply();//???
     }
 
     private void rememberUser(String email, String pass) {
@@ -177,7 +178,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(SendKeys.EMAIL, email);
         editor.putString(SendKeys.PASS, pass);
-        editor.commit();
+        editor.apply();
     }
 
     @Override

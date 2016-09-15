@@ -40,4 +40,5 @@ public interface SendKeys {
     String FRIEND_LAST_ONLINE = "FRIEND_LAST_ONLINE";
 
     String WHO_AM_I = "WHO_AM_I";
+    String I_AM_CONNECTED = "I_AM_CONNECTED";
 }

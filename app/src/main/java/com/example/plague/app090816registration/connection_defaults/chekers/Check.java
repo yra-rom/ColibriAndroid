@@ -5,7 +5,6 @@ import android.util.Log;
 import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

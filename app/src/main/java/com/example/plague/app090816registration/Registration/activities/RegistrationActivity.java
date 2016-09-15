@@ -164,7 +164,7 @@ public class RegistrationActivity extends AppCompatActivity {
 //        CheckThread signThread = new CheckThread(map);
 //        signThread.start();
 
-        while(registration.getAnswer() == null); // potential dead loop!!!
+        while(registration.getAnswer() == null); // potential dead loop!!! activity blocks until no answer
         Boolean answer = registration.getAnswer();
         Log.d(TAG, "Server's answer is: " + answer);
 

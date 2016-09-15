@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -65,7 +66,10 @@ public class MessagesActivity extends AppCompatActivity {
         initViews();
         initHandler();
         notifyHandler();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar !=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         startWaitingForMessage();
     }
 
@@ -77,7 +81,7 @@ public class MessagesActivity extends AppCompatActivity {
 
     private void notifyHandler() {
 //        if(handler != null){
-//            Message msg = handler.obtainMessage(Status.CH_WHERE_SHOW, Status.ON_SCREEN, 0, null);
+//            Message msg = handler.obtainMessage(StatusINT.CH_WHERE_SHOW, StatusINT.ON_SCREEN, 0, null);
 //            handler.sendMessage(msg);
 //        }
     }
@@ -178,7 +182,7 @@ public class MessagesActivity extends AppCompatActivity {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(to, msg);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -187,7 +191,7 @@ public class MessagesActivity extends AppCompatActivity {
         super.onResume();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String msg = preferences.getString(to, "");
-        if(msg != ""){
+        if(!msg.equals("")){
             etSend.setText(msg);
         }
     }

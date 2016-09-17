@@ -20,7 +20,7 @@ import com.example.plague.app090816registration.Messaging.MessagePak.MessageBuil
 import com.example.plague.app090816registration.Messaging.Receiver;
 import com.example.plague.app090816registration.Messaging.clients.SendThread;
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.Tabs.MessageHandler;
+import com.example.plague.app090816registration.Messaging.MessageHandler;
 import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 import java.text.SimpleDateFormat;
@@ -39,20 +39,20 @@ public class MessagesActivity extends AppCompatActivity {
     Thread messageThread = new Thread() {
         @Override
         public void run() {
-            while (!isInterrupted()) {//isInteruted
-                try {
-                    ConcurrentLinkedQueue<Message> queue = Receiver.getMessages().get(to);
-                    if(queue != null) {
-                        Message msg = queue.poll();
-                        if (msg != null) {
-                            String text = msg.getMessage();
-                            showReceivedMsg(text);
-                        }
+        while (!isInterrupted()) {
+            try {
+                ConcurrentLinkedQueue<Message> queue = Receiver.getMessages().get(to);
+                if(queue != null) {
+                    Message msg = queue.poll();
+                    if (msg != null) {
+                        String text = msg.getMessage();
+                        showReceivedMsg(text);
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
         }
     };
 
@@ -77,7 +77,6 @@ public class MessagesActivity extends AppCompatActivity {
 //        Intent intent = getIntent();
 //        handler = intent.getParcelableExtra(SendKeys.HANDLER);
     }
-
 
     private void notifyHandler() {
 //        if(handler != null){
@@ -178,7 +177,7 @@ public class MessagesActivity extends AppCompatActivity {
 
     private void saveLastWords() {
         String msg = etSend.getText().toString().trim();
-        if(msg != "") {
+        if(msg.equals("")) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(to, msg);
@@ -201,9 +200,5 @@ public class MessagesActivity extends AppCompatActivity {
         super.onPause();
         saveLastWords();
         stopWaitingForMessage();
-    }
-
-    public String getWho() {
-        return to;
     }
 }

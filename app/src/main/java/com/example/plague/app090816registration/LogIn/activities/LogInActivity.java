@@ -80,7 +80,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
     private void startCheckingConnection() {
         chConn = new CheckConnectionThread(this);
-        chConn.start();
     }
 
     private void addTextChangeListeners() {
@@ -131,8 +130,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void logInUser() {
-        String email = etEmail.getText().toString();
-        String pass = etPassword.getText().toString();
+        String email = etEmail.getText().toString().trim();
+        String pass = etPassword.getText().toString().trim();
 
         Check ch = Check.getInstance();
 
@@ -141,13 +140,10 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 if(cbKeepLogged.isChecked()){
                     rememberUser(email, pass);
                 }
-                rememberMe(email);
+                rememberMeHidden(email);
                 Intent intent = new Intent(this, TabsActivity.class);
                 intent.putExtra(SendKeys.EMAIL, email);
                 startActivity(intent);
-                //TO DO Activity when is logged in
-                //TO DO when new activity will start start Receive Threads
-                //TO DO when choose person to dialog send new Send Thread
             }else{
                 etPassword.setTextColor(Color.RED);
                 etPassword.setHintTextColor(Color.RED);
@@ -160,20 +156,14 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void rememberMe(String email) {
+    private void rememberMeHidden(String email) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(SendKeys.EMAIL, email);
-        editor.apply();//???
+        editor.putString(SendKeys.EMAIL_HIDDEN, email);
+        editor.apply();
     }
 
     private void rememberUser(String email, String pass) {
-//        SharedPreferences sharedPrefs = getPreferences(MODE_PRIVATE);
-//        SharedPreferences.Editor ed = sharedPrefs.edit();
-//        ed.putString(SendKeys.EMAIL, email);
-//        ed.putString(SendKeys.PASS, pass);
-//        ed.commit();
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(SendKeys.EMAIL, email);

@@ -15,88 +15,46 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.plague.app090816registration.Messaging.MessageManager;
 import com.example.plague.app090816registration.Messaging.MessagePak.Message;
-import com.example.plague.app090816registration.Messaging.MessagePak.MessageBuilder;
-import com.example.plague.app090816registration.Messaging.Receiver;
-import com.example.plague.app090816registration.Messaging.clients.SendThread;
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.Messaging.MessageHandler;
 import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MessagesActivity extends AppCompatActivity {
 
     private EditText etSend;
     private Button btnSend;
     private LinearLayout llReceived;
-    private String to;
-
-    private MessageHandler handler;
-
-    Thread messageThread = new Thread() {
-        @Override
-        public void run() {
-        while (!isInterrupted()) {
-            try {
-                ConcurrentLinkedQueue<Message> queue = Receiver.getMessages().get(to);
-                if(queue != null) {
-                    Message msg = queue.poll();
-                    if (msg != null) {
-                        String text = msg.getMessage();
-                        showReceivedMsg(text);
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        }
-    };
-
+    private String friend_nick;
+    private String friend_email;
+    private Thread gettingMeesage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messages_main);
+        getExtras();
         initTitle();
-
         initViews();
-        initHandler();
-        notifyHandler();
+
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar !=null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        startWaitingForMessage();
+
     }
 
-    private void initHandler() {
-//        Intent intent = getIntent();
-//        handler = intent.getParcelableExtra(SendKeys.HANDLER);
-    }
-
-    private void notifyHandler() {
-//        if(handler != null){
-//            Message msg = handler.obtainMessage(StatusINT.CH_WHERE_SHOW, StatusINT.ON_SCREEN, 0, null);
-//            handler.sendMessage(msg);
-//        }
-    }
-
-    private void startWaitingForMessage() {
-        messageThread.start();
-    }
-
-    private void stopWaitingForMessage() {
-        messageThread.interrupt();
+    private void getExtras() {
+        Intent intent = getIntent();
+        friend_nick = intent.getStringExtra(SendKeys.FRIEND_NICK);
+        friend_email = intent.getStringExtra(SendKeys.FRIEND_EMAIL);
     }
 
     private void initTitle() {
-        Intent intent = getIntent();
-        to = intent.getStringExtra(SendKeys.NICK);
-        setTitle(to);
+        setTitle(friend_nick);
     }
 
     private void initViews() {
@@ -115,16 +73,9 @@ public class MessagesActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-        String msg = etSend.getText().toString().trim();
-        showSendMsg(msg);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String from =  prefs.getString(SendKeys.EMAIL, "");
-        String time = new SimpleDateFormat("hh.mm").format(new Date().getTime());
-
-        Message message = new MessageBuilder().message(msg).time(time).from(from).to(to).build();
-        SendThread sendThread = new SendThread(message);
-        sendThread.start();
+        String textMessage = etSend.getText().toString().trim();
+        showSendMsg(textMessage);
+        MessageManager.getInstance().send(textMessage, friend_email);
     }
 
     private void showSendMsg(String msg) {
@@ -143,28 +94,6 @@ public class MessagesActivity extends AppCompatActivity {
         llReceived.addView(v);
     }
 
-    public void showReceivedMsg(final String message) throws InterruptedException {
-        wait();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                LayoutInflater inflater = getLayoutInflater();
-                View v = inflater.inflate(R.layout.message_received, null, true);
-                ViewGroup.LayoutParams lp = v.getLayoutParams();
-
-                TextView tvMsg = (TextView) v.findViewById(R.id.rcd_tvMsg);
-                TextView tvMsgInfo = (TextView) v.findViewById(R.id.rcd_tvMsgInfo);
-
-                tvMsg.setText(message);
-
-                String time = new SimpleDateFormat("hh:mm").format(new Date());
-                tvMsgInfo.setText(time);
-
-                llReceived.addView(v);
-            }
-        });
-    }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) { //app icon in action bar clicked; go back
             saveLastWords();
@@ -180,7 +109,7 @@ public class MessagesActivity extends AppCompatActivity {
         if(msg.equals("")) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(to, msg);
+            editor.putString(friend_email, msg);
             editor.apply();
         }
     }
@@ -189,16 +118,64 @@ public class MessagesActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String msg = preferences.getString(to, "");
+        String msg = preferences.getString(friend_email, "");
         if(!msg.equals("")){
             etSend.setText(msg);
         }
+        receiveMessage();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         saveLastWords();
-        stopWaitingForMessage();
+        stopGettingMessages();
+    }
+
+    private void stopGettingMessages() {
+        if(gettingMeesage != null){
+            gettingMeesage.interrupt();
+            gettingMeesage = null;
+        }
+    }
+
+    private void receiveMessage(){
+        MessageManager.getInstance().getMessageFrom(friend_email);
+
+        gettingMeesage = new Thread() {
+            @Override
+            public void run() {
+                while(!isInterrupted()) {
+                    Message message = null;
+                    while (message == null) {
+                        message = MessageManager.getInstance().getNextMessage();
+                    }
+                    showReceivedMsg(message);
+                }
+            }
+        };
+
+        gettingMeesage.start();
+    }
+
+    public void showReceivedMsg(final Message message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LayoutInflater inflater = getLayoutInflater();
+                View v = inflater.inflate(R.layout.message_received, null, true);
+                ViewGroup.LayoutParams lp = v.getLayoutParams();
+
+                TextView tvMsg = (TextView) v.findViewById(R.id.rcd_tvMsg);
+                TextView tvMsgInfo = (TextView) v.findViewById(R.id.rcd_tvMsgInfo);
+
+                tvMsg.setText(message.getMessage());
+
+                String time = message.getTime();
+                tvMsgInfo.setText(time);
+
+                llReceived.addView(v);
+            }
+        });
     }
 }

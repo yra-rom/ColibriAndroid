@@ -3,6 +3,7 @@ package com.example.plague.app090816registration.connection_defaults.chekers;
 import android.util.Log;
 
 import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.clients.ClientThread;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -35,20 +36,20 @@ public class Check {
     }
 
     public boolean checkEmailDB(String email) {
-        HashMap map = new HashMap<>();
-        map.put(SendKeys.TITLE, SendKeys.CHECK_MAIL);
-        map.put(SendKeys.EMAIL, email);
+        HashMap<String, String> mapSend = new HashMap<>();
+        mapSend.put(SendKeys.TITLE, SendKeys.CHECK_MAIL);
+        mapSend.put(SendKeys.EMAIL, email);
 
-        CheckThread checkThread = new CheckThread(map);
-        checkThread.start();
+        ClientThread.getInstance().toSend(mapSend);
 
-        while(checkThread.getAnswer()==null); // potential dead loop!!!
-        Log.d(TAG, "Server's answer is: " + checkThread.getAnswer());
+        HashMap mapReceive = null;
+        while (mapReceive == null){
+            mapReceive = ClientThread.getInstance().getAnswerFor(SendKeys.CHECK_MAIL);
+        }
+        String answer = (String) mapReceive.get(SendKeys.ANSWER);
+        Log.d(TAG, "Server's answer is: " + answer);
 
-        checkThread.close();
-        checkThread.interrupt();
-
-        return checkThread.getAnswer();
+        return answer.equals(SendKeys.TRUE);
     }
 
     public boolean checkPassword(String email, String pass){
@@ -56,12 +57,24 @@ public class Check {
     }
 
     public boolean checkPasswordDB(String email, String pass) {
-        HashMap map = new HashMap<>();
-        map.put(SendKeys.TITLE, SendKeys.CHECK_PASS);
-        map.put(SendKeys.EMAIL, email);
-        map.put(SendKeys.PASS, pass);
+        HashMap<String,String> mapSend = new HashMap<>();
+        mapSend.put(SendKeys.TITLE, SendKeys.CHECK_PASS);
+        mapSend.put(SendKeys.EMAIL, email);
+        mapSend.put(SendKeys.PASS, pass);
 
 
+        ClientThread.getInstance().toSend(mapSend);
+
+        HashMap mapReceive = null;
+        while (mapReceive == null){
+            mapReceive = ClientThread.getInstance().getAnswerFor(SendKeys.CHECK_PASS);
+        }
+        String answer = (String) mapReceive.get(SendKeys.ANSWER);
+        Log.d(TAG, "Server's answer is: " + answer);
+
+        return answer.equals(SendKeys.TRUE);
+
+/*
         CheckThread signThread = new CheckThread(map);
         signThread.start();
 
@@ -72,6 +85,7 @@ public class Check {
         signThread.interrupt();
 
         return signThread.getAnswer();
+*/
     }
 
     public boolean checkPasswordLocal(String pass) {
@@ -80,11 +94,22 @@ public class Check {
     }
 
     public boolean checkEmailIsFree(String email) {
-        HashMap map = new HashMap<>();
-        map.put(SendKeys.TITLE, SendKeys.CHECK_MAIL);
-        map.put(SendKeys.EMAIL, email);
+        HashMap<String, String> mapSend = new HashMap<>();
+        mapSend.put(SendKeys.TITLE, SendKeys.CHECK_MAIL);
+        mapSend.put(SendKeys.EMAIL, email);
 
-        CheckThread signThread = new CheckThread(map);
+        ClientThread.getInstance().toSend(mapSend);
+
+        HashMap mapReceive = null;
+        while (mapReceive == null){
+            mapReceive = ClientThread.getInstance().getAnswerFor(SendKeys.CHECK_MAIL);
+        }
+        String answer = (String) mapReceive.get(SendKeys.ANSWER);
+        Log.d(TAG, "Server's answer is: " + answer);
+
+        return answer.equals(SendKeys.FALSE);
+
+/*        CheckThread signThread = new CheckThread(map);
         signThread.start();
         while(signThread.getAnswer()==null); // potential dead loop!!!
         Log.d(TAG, "Server's answer is: " + signThread.getAnswer());
@@ -92,7 +117,7 @@ public class Check {
         signThread.close();
         signThread.interrupt();
 
-        return !signThread.getAnswer();
+        return !signThread.getAnswer();*/
     }
 
 }

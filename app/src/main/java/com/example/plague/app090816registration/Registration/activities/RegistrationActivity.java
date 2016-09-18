@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.Registration.clients.RegistrationThread;
+import com.example.plague.app090816registration.Registration.clients.Registration;
 import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 import com.example.plague.app090816registration.connection_defaults.UserPak.User;
 import com.example.plague.app090816registration.connection_defaults.UserPak.UserBuilder;
@@ -151,8 +151,8 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private Boolean registerUser(User user) {
-        RegistrationThread registration = new RegistrationThread(user);
-        registration.start();
+        Registration registration = new Registration(user);
+        registration.registerUser();
 
 //        Map map = new HashMap<String, String>();
 //        map.put(SendKeys.TITLE, SendKeys.REGISTER);
@@ -167,9 +167,6 @@ public class RegistrationActivity extends AppCompatActivity {
         while(registration.getAnswer() == null); // potential dead loop!!! activity blocks until no answer
         Boolean answer = registration.getAnswer();
         Log.d(TAG, "Server's answer is: " + answer);
-
-        registration.close();
-        registration.interrupt();
 
         return answer;
     }

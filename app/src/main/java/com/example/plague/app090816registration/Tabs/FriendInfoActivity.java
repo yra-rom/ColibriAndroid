@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.plague.app090816registration.Messaging.activities.MessagesActivity;
 import com.example.plague.app090816registration.R;
+import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 
 public class FriendInfoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -23,6 +24,7 @@ public class FriendInfoActivity extends AppCompatActivity implements View.OnClic
     private Button btnChat;
 
     private String nick;
+    private String email;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +61,8 @@ public class FriendInfoActivity extends AppCompatActivity implements View.OnClic
 
     private void initTitle() {
         Intent intent = getIntent();
-        nick = intent.getStringExtra("NICK");
+        nick = intent.getStringExtra(SendKeys.FRIEND_NICK);
+        email = intent.getStringExtra(SendKeys.FRIEND_EMAIL);
         setTitle(nick);
     }
 
@@ -70,7 +73,8 @@ public class FriendInfoActivity extends AppCompatActivity implements View.OnClic
                 //TO DO
                 //test this
                 Intent intent = new Intent(this, MessagesActivity.class);
-                intent.putExtra("NICK", nick);
+                intent.putExtra(SendKeys.FRIEND_NICK, nick);
+                intent.putExtra(SendKeys.FRIEND_EMAIL, email);
                 startActivity(intent);
                 break;
             case R.id.frndInfo_btnCall:
@@ -85,7 +89,6 @@ public class FriendInfoActivity extends AppCompatActivity implements View.OnClic
             this.finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

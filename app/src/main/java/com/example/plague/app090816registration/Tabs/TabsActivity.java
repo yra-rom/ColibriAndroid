@@ -13,8 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.example.plague.app090816registration.Messaging.Receiver;
-import com.example.plague.app090816registration.Messaging.clients.StatusINT;
 import com.example.plague.app090816registration.R;
 import com.example.plague.app090816registration.Tabs.ChatsList.TwoFragment;
 import com.example.plague.app090816registration.Tabs.FriendsList.OneFragment;
@@ -28,8 +26,6 @@ public class TabsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-
-    private MessageHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +55,15 @@ public class TabsActivity extends AppCompatActivity {
     }
 
     private void startReceivingMessages() {
-        handler = new MessageHandler();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String email =  prefs.getString(SendKeys.EMAIL, "");
 //        new Receiver(getIntent().getStringExtra(SendKeys.EMAIL), handler);
-        new Receiver(email, handler);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         OneFragment one = new OneFragment();
-        one.setHandler(handler);
         TwoFragment two = new TwoFragment();
-        two.setHandler(handler);
         adapter.addFragment(one, "Friends");
         adapter.addFragment(two, "Chats");
         viewPager.setAdapter(adapter);
@@ -109,12 +101,5 @@ public class TabsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //override not to get back to login activity
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Message msg = handler.obtainMessage(StatusINT.CH_WHERE_SHOW, StatusINT.IN_SERVICE, 0, null);
-        handler.sendMessage(msg);
     }
 }

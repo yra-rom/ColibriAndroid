@@ -1,27 +1,25 @@
 package com.example.plague.app090816registration.Tabs.FriendsList;
 
 public class FriendItem {
-    private String name;
+    private String nick;
     private boolean isOnline;
+    private String email;
 
     public FriendItem(FriendItemBuilder builder) {
-        this.name = builder.getName();
+        this.nick = builder.getName();
         this.isOnline = builder.isOnline();
+        this.email = builder.getEmail();
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getNick() {
+        return nick;
     }
 
     public boolean isOnline() {
         return isOnline;
-    }
-
-    public void setOnline(boolean online) {
-        isOnline = online;
     }
 }

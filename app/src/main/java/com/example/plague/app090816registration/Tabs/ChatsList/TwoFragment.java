@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.example.plague.app090816registration.Messaging.activities.MessagesActivity;
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.Tabs.MessageHandler;
+import com.example.plague.app090816registration.Tabs.FriendsList.GetFriendsThread;
 import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 
 import java.util.ArrayList;
@@ -22,14 +22,9 @@ public class TwoFragment extends Fragment {
     private ListView lvChats;
     private List<ChatItem> items;
     private ChatsAdapter adapter;
-    private MessageHandler handler;
 
     public TwoFragment() {
         // Required empty public constructor
-    }
-
-    public void setHandler(MessageHandler handler) {
-        this.handler = handler;
     }
 
     @Override
@@ -52,8 +47,6 @@ public class TwoFragment extends Fragment {
 
         //TO DO
         //connect to db and get your friends
-        new GetFriendsThread(items).start();
-
 
         /* Only for debug*/
         /*---------------------------------------------------------------*/

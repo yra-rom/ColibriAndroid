@@ -1,9 +1,6 @@
 package com.example.plague.app090816registration.connection_defaults.Constants;
 
 public interface SendKeys {
-
-    //������� � ������ �� ����
-
     //for checks
     String TITLE = "TITLE";
     String CHECK_MAIL = "CHECK_EMAIL";
@@ -27,10 +24,8 @@ public interface SendKeys {
 
     String TIME = "TIME";
     String WHO = "WHO";
-    String ACTIVITY = "ACTIVITY";
 
     int NEW_MESSAGE_STATUS = 0;
-    String HANDLER = "HANDLER";
 
     String GET_FRIENDS = "GET_FRIENDS";
     String COUNT_FRIENDS = "COUNT_FRIENDS";
@@ -40,5 +35,10 @@ public interface SendKeys {
     String FRIEND_LAST_ONLINE = "FRIEND_LAST_ONLINE";
 
     String WHO_AM_I = "WHO_AM_I";
-    String I_AM_CONNECTED = "I_AM_CONNECTED";
+
+    String ANSWER = "ANSWER";
+    String TRUE = "TRUE";
+    String FALSE = "FALSE";
+
+    String EMAIL_HIDDEN = "EMAIL_HIDDEN";
 }

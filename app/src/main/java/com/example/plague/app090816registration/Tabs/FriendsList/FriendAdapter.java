@@ -44,7 +44,7 @@ public class FriendAdapter extends BaseAdapter {
 
         TextView tvName = (TextView) view.findViewById(R.id.itemFrnd_tvName);
         ImageView imOnline = (ImageView) view.findViewById(R.id.itemFrnd_ivOnline);
-        tvName.setText(((FriendItem)getItem(i)).getName());
+        tvName.setText(((FriendItem)getItem(i)).getNick());
         imOnline.setVisibility( ((FriendItem)getItem(i)).isOnline() ? View.VISIBLE : View.INVISIBLE );
         return view;
     }

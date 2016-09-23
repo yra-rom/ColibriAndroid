@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.plague.app090816registration.R;
 import com.example.plague.app090816registration.Registration.activities.RegistrationActivity;
 import com.example.plague.app090816registration.Tabs.TabsActivity;
+import com.example.plague.app090816registration.connection_defaults.WhoAmI;
 import com.example.plague.app090816registration.connection_defaults.clients.CheckConnectionThread;
 import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
 import com.example.plague.app090816registration.connection_defaults.chekers.Check;
@@ -160,6 +161,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(SendKeys.EMAIL_HIDDEN, email);
+        new WhoAmI(email);
         editor.apply();
     }
 

@@ -3,10 +3,12 @@ package com.example.plague.app090816registration.Messaging;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.plague.app090816registration.Messaging.MessagePak.Message;
 import com.example.plague.app090816registration.Messaging.MessagePak.MessageBuilder;
 import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.WhoAmI;
 import com.example.plague.app090816registration.connection_defaults.clients.ClientThread;
 
 import java.text.SimpleDateFormat;
@@ -14,7 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class MessageManager extends Activity {
+public class MessageManager{
     private static final String TAG = "MessageManager";
     private static MessageManager instance = new MessageManager();
     private Thread getThread;
@@ -28,16 +30,14 @@ public class MessageManager extends Activity {
     private static ConcurrentLinkedQueue<Message> messages = new ConcurrentLinkedQueue<>();
 
     public void send(final String textMessage, final String to){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String from = prefs.getString(SendKeys.EMAIL_HIDDEN, "");
-        String time = new SimpleDateFormat("hh.mm").format(new Date().getTime());//Десь тут nullPointer
+        String time = new SimpleDateFormat("hh.mm").format(new Date().getTime());
 
         HashMap<String,String> map = new HashMap<>();
         map.put(SendKeys.TITLE, SendKeys.MESSAGE_SEND);
         map.put(SendKeys.MESSAGE, textMessage);
         map.put(SendKeys.TIME, time);
         map.put(SendKeys.TO, to);
-        map.put(SendKeys.FROM, from);
+//        map.put(SendKeys.FROM, WhoAmI.getEmail());
 
         ClientThread.getInstance().toSend(map);
     }

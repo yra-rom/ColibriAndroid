@@ -60,10 +60,10 @@ public class OneFragment extends Fragment{
 
     private void initAdapter() {
         adapter = new FriendAdapter(getContext(), items);
-        /* Only for debug*/
-//        items.add(new FriendItemBuilder().name("Masha").online(true).build() );
         lvFriends.setAdapter(adapter);
+
         new Thread(new GetFriendsThread(items, adapter)).start();
+
     }
 
 }

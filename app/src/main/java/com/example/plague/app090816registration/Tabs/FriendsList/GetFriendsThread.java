@@ -55,7 +55,14 @@ public class GetFriendsThread extends AppCompatActivity implements Runnable {
             mapReceive = ClientThread.getInstance().getAnswerFor(SendKeys.GET_FRIENDS);
         }
 
-        items.clear();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                items.clear();
+                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetInvalidated();
+            }
+        });
 
         Integer count = Integer.valueOf( (String) mapReceive.get(SendKeys.COUNT_FRIENDS) );
         Log.d(TAG, "We have " + count + " friends");
@@ -69,7 +76,6 @@ public class GetFriendsThread extends AppCompatActivity implements Runnable {
                 Log.d(TAG, "Friend " + i + "email: " + email + "nick: " + nick);
 
                 FriendItem item = new FriendItemBuilder().name(nick).email(email).online(true).build();
-
                 items.add(item);
 
                 runOnUiThread(new Runnable() {

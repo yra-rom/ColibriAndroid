@@ -1,12 +1,14 @@
-package com.example.plague.app090816registration.Tabs.FriendsList;
+package com.example.plague.app090816registration.tabs.friendslist;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.plague.app090816registration.connection_defaults.clients.ClientThread;
-import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.constants.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.friend.Friend;
+import com.example.plague.app090816registration.connection_defaults.packet.Packet;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetFriendsThread extends AppCompatActivity implements Runnable {
@@ -45,14 +47,14 @@ public class GetFriendsThread extends AppCompatActivity implements Runnable {
     }
 
     private void updateList(){
-        HashMap <String, String> mapSend = new HashMap<>();
-        mapSend.put(SendKeys.TITLE, SendKeys.GET_FRIENDS);
 
-        ClientThread.getInstance().toSend(mapSend);
+        Packet packetOut = new Packet(SendKeys.GET_FRIENDS, "nothing");
 
-        HashMap mapReceive = null;
-        while (mapReceive == null) {
-            mapReceive = ClientThread.getInstance().getAnswerFor(SendKeys.GET_FRIENDS);
+        ClientThread.getInstance().toSend(packetOut);
+
+        Packet packetIn = null;
+        while (packetIn == null) {
+            packetIn = ClientThread.getInstance().getAnswerFor(SendKeys.GET_FRIENDS);
         }
 
         runOnUiThread(new Runnable() {
@@ -64,16 +66,15 @@ public class GetFriendsThread extends AppCompatActivity implements Runnable {
             }
         });
 
-        Integer count = Integer.valueOf( (String) mapReceive.get(SendKeys.COUNT_FRIENDS) );
-        Log.d(TAG, "We have " + count + " friends");
-        if(count != null && count > 0) {
-            for (int i = 0; i < count; ++i) {
+        ArrayList<Friend> friends = (ArrayList<Friend>) packetIn.getMessage();
 
-                String nick = (String) mapReceive.get(SendKeys.FRIEND_NICK + i);
-                String email = (String) mapReceive.get(SendKeys.FRIEND_EMAIL + i);
-                String lastOnline = (String) mapReceive.get(SendKeys.FRIEND_LAST_ONLINE + i);
+        Log.d(TAG, "We have " + friends.size() + " friends");
+        if(friends.size() > 0) {
 
-                Log.d(TAG, "Friend " + i + "email: " + email + "nick: " + nick);
+            for(Friend friend : friends){
+                String nick = friend.getNick();
+                String email = friend.getEmail();
+                String lastOnline = friend.getLastOnline();
 
                 FriendItem item = new FriendItemBuilder().name(nick).email(email).online(true).build();
                 items.add(item);

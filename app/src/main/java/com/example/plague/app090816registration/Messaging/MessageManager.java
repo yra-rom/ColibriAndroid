@@ -1,19 +1,13 @@
-package com.example.plague.app090816registration.Messaging;
+package com.example.plague.app090816registration.messaging;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
-
-import com.example.plague.app090816registration.Messaging.MessagePak.Message;
-import com.example.plague.app090816registration.Messaging.MessagePak.MessageBuilder;
-import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
-import com.example.plague.app090816registration.connection_defaults.WhoAmI;
 import com.example.plague.app090816registration.connection_defaults.clients.ClientThread;
+import com.example.plague.app090816registration.connection_defaults.constants.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.packet.Packet;
+import com.example.plague.app090816registration.messaging.message.Message;
+import com.example.plague.app090816registration.messaging.message.MessageBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MessageManager{
@@ -29,17 +23,15 @@ public class MessageManager{
 
     private static ConcurrentLinkedQueue<Message> messages = new ConcurrentLinkedQueue<>();
 
-    public void send(final String textMessage, final String to){
+    public void send(final String text, final String to){
         String time = new SimpleDateFormat("hh.mm").format(new Date().getTime());
 
-        HashMap<String,String> map = new HashMap<>();
-        map.put(SendKeys.TITLE, SendKeys.MESSAGE_SEND);
-        map.put(SendKeys.MESSAGE, textMessage);
-        map.put(SendKeys.TIME, time);
-        map.put(SendKeys.TO, to);
+        Message message = new MessageBuilder().to(to).time(time).message(text).build();
+        Packet packet = new Packet(SendKeys.MESSAGE_SEND, message);
+
 //        map.put(SendKeys.FROM, WhoAmI.getEmail());
 
-        ClientThread.getInstance().toSend(map);
+        ClientThread.getInstance().toSend(packet);
     }
 
 //    private void checkForReceiveMessages(){
@@ -76,14 +68,10 @@ public class MessageManager{
             @Override
             public void run() {
                 while (!isInterrupted()) {
-                    HashMap mapNewMessage = ClientThread.getInstance().getAnswerFor(SendKeys.MESSAGE_RECEIVED);
-                    if (mapNewMessage != null) {
-                        String text = (String) mapNewMessage.get(SendKeys.MESSAGE);
-                        String time = (String) mapNewMessage.get(SendKeys.TIME);
-                        String to = (String) mapNewMessage.get(SendKeys.TO);
-                        String from = (String) mapNewMessage.get(SendKeys.FROM);
+                    Packet packet = ClientThread.getInstance().getAnswerFor(SendKeys.MESSAGE_RECEIVED);
+                    if (packet != null) {
 
-                        Message message = new MessageBuilder().message(text).time(time).to(to).from(from).build();
+                        Message message = (Message) packet.getMessage();
                         messages.add(message);
                     }else{
                         try {

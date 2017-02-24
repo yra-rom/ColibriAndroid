@@ -1,4 +1,4 @@
-package com.example.plague.app090816registration.Tabs.FriendsList;
+package com.example.plague.app090816registration.tabs.friendslist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.plague.app090816registration.Tabs.FriendInfoActivity;
+import com.example.plague.app090816registration.tabs.FriendInfoActivity;
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.constants.SendKeys;
 
 import java.util.ArrayList;
 import java.util.List;

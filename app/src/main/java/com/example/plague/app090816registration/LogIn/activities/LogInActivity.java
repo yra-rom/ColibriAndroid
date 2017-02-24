@@ -16,15 +16,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.plague.app090816registration.R;
-import com.example.plague.app090816registration.Registration.activities.RegistrationActivity;
-import com.example.plague.app090816registration.Tabs.TabsActivity;
+import com.example.plague.app090816registration.registration.activities.RegistrationActivity;
+import com.example.plague.app090816registration.tabs.TabsActivity;
 import com.example.plague.app090816registration.connection_defaults.WhoAmI;
 import com.example.plague.app090816registration.connection_defaults.clients.CheckConnectionThread;
-import com.example.plague.app090816registration.connection_defaults.Constants.SendKeys;
+import com.example.plague.app090816registration.connection_defaults.constants.SendKeys;
 import com.example.plague.app090816registration.connection_defaults.chekers.Check;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
-    public static final String TAG = "LogInActivity";
+    private final String TAG = this.getClass().getSimpleName();
 
     private EditText etEmail;
     private EditText etPassword;
